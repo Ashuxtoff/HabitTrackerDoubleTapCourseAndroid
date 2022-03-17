@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Task3</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="priority">Priority</string>
+    <string name="type">Type</string>
+    <string name="periodicity">Periodicity</string>
+
+    <!--
+    <string name="periodicity_value_string"> %$1d per %$2s </string>
+    -->
+
+    <string name="hint_title">Name your habit</string>
+    <string name="hint_description">Describe your habit</string>
+    <string name="hint_priority">Set priority of your habit</string>
+    <string name="hint_events_count_useful">How many times do you want to do it?</string>
+    <string name="hint_events_count_neutral">How many times do you do it?</string>
+    <string name="hint_events_count_bad">What is the limit of this for you?</string>
+    <string name="hint_type_of_time_interval">Select time interval</string>
+
+    <string name="useful_radiobutton_name">Useful</string>
+    <string name="neutral_radiobutton_name">Neutral</string>
+    <string name="bad_radiobutton_name">Bad</string>
+
+    <string name="add_button_text">Add habit</string>
+    <string name="edit_button_text">Edit habit</string>
+</resources>
