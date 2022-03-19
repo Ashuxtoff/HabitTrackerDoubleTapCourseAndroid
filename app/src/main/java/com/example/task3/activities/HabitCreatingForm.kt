@@ -2,6 +2,8 @@ package com.example.task3.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -9,11 +11,22 @@ import com.example.task3.R
 import com.example.task3.objects.TimeIntervalType
 import kotlinx.android.synthetic.main.habit_form.*
 
-class HabitCreatingForm : AppCompatActivity() {
+class HabitCreatingForm : AppCompatActivity(), TextWatcher {
 
-    private val priorities = arrayOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")
-    private val typesOfTimeInterval = TimeIntervalType.values().map { it.value }
-    private var currentTypeString = "useful"
+    companion object {
+        const val ID = "id"
+        const val TITLE = "title"
+        const val DESCRIPTION = "description"
+        const val PRIORITY = "priority"
+        const val TYPE = "type"
+        const val EVENTS_COUNT = "eventsCount"
+        const val TIME_INTERVAL_TYPE = "timeIntervalType"
+    }
+
+    private val priorities get() = resources.getStringArray(R.array.priorities)
+    private val typesOfTimeInterval get() = TimeIntervalType.values().map { getString(it.resId) }
+    private var currentTypeId = 0
+    private var currentTimeIntervalTypeId = -1
     private var resultCode = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,27 +37,30 @@ class HabitCreatingForm : AppCompatActivity() {
             ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, priorities)
         )
 
-       time_interval_input.setAdapter(
-           ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, typesOfTimeInterval)
-       )
+
+       time_interval_input.apply {
+           setAdapter(ArrayAdapter(this.context, android.R.layout.simple_dropdown_item_1line, typesOfTimeInterval))
+           addTextChangedListener(this@HabitCreatingForm)
+
+       }
 
         useful_type_radiobutton.setOnClickListener {
-            currentTypeString = "useful"
-            count_of_events_input.hint = getString(R.string.hint_events_count_useful)
+            currentTypeId = R.string.usefulHabitKey
+            count_of_events_input.hint = getString(R.string.hintEventsCountUseful)
         }
 
         neutral_type_radiobutton.setOnClickListener {
-            currentTypeString = "neutral"
-            count_of_events_input.hint = getString(R.string.hint_events_count_neutral)
+            currentTypeId = R.string.neutralHabitKey
+            count_of_events_input.hint = getString(R.string.hintEventsCountNeutral)
         }
 
         bad_type_radiobutton.setOnClickListener {
-            currentTypeString = "bad"
-            count_of_events_input.hint = getString(R.string.hint_events_count_bad)
+            currentTypeId = R.string.badHabitKey
+            count_of_events_input.hint = getString(R.string.hintEventsCountBad)
         }
 
         useful_type_radiobutton.isChecked = true
-        count_of_events_input.hint = getString(R.string.hint_events_count_useful)
+        count_of_events_input.hint = getString(R.string.hintEventsCountUseful)
 
         resultCode = HabitsList.RESULT_CREATING_OK
 
@@ -54,46 +70,60 @@ class HabitCreatingForm : AppCompatActivity() {
             val description = description_input.text.toString()
             val priorityString = priority_input.text.toString()
             val countOfEventsString = count_of_events_input.text.toString()
-            val timeIntervalTypeString = time_interval_input.text.toString()
 
-            if (title.isEmpty() or priorityString.isEmpty() or countOfEventsString.isEmpty() or timeIntervalTypeString.isEmpty()) {
-                Toast.makeText(this, "Please, fill all required fields", Toast.LENGTH_SHORT).show()
+            if (title.isEmpty() || priorityString.isEmpty() || countOfEventsString.isEmpty() || currentTimeIntervalTypeId == -1) {
+                Toast.makeText(this, getString(R.string.emptyRequiredFieldsToast), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             val listIntent = Intent(this, HabitsList::class.java).apply {
                 val bundle = Bundle().apply {
-                    putExtra("title", title)
-                    putExtra("description", description)
-                    putExtra("priority", priorityString.toInt())
-                    putExtra("type", currentTypeString)
-                    putExtra("eventsCount", countOfEventsString.toInt())
-                    putExtra("timeIntervalType", timeIntervalTypeString)
+                    putExtra(TITLE, title) //todo вынести константы
+                    putExtra(DESCRIPTION, description)
+                    putExtra(PRIORITY, priorityString.toInt())
+                    putExtra(TYPE, currentTypeId)
+                    putExtra(EVENTS_COUNT, countOfEventsString.toInt())
+                    putExtra(TIME_INTERVAL_TYPE, currentTimeIntervalTypeId)
 
-                    if (intent.hasExtra("id")) putExtra("id", intent.getStringExtra("id"))
+                    if (intent.hasExtra(ID)) putExtra(ID, intent.getStringExtra(ID))
                 }
+                putExtras(bundle)
             }
 
             setResult(resultCode, listIntent)
             finish()
         }
 
-        if (intent.hasExtra("id")) {
-            title_input.setText(intent.getStringExtra("title"))
-            description_input.setText(intent.getStringExtra("description"))
-            priority_input.setText(intent.getIntExtra("priority", -1).toString())
-            when (intent.getStringExtra("type")) {
-                "useful" -> useful_type_radiobutton.isChecked = true
-                "neutral" -> neutral_type_radiobutton.isChecked = true
-                "bad" -> bad_type_radiobutton.isChecked = true
+        if (intent.hasExtra(ID)) {
+            title_input.setText(intent.getStringExtra(TITLE))
+            description_input.setText(intent.getStringExtra(DESCRIPTION))
+            priority_input.setText(intent.getIntExtra(PRIORITY, -1).toString())
+            when (intent.getIntExtra(TYPE, -1)) {
+                R.string.usefulHabitKey -> useful_type_radiobutton.isChecked = true
+                R.string.neutralHabitKey -> neutral_type_radiobutton.isChecked = true
+                R.string.badHabitKey -> bad_type_radiobutton.isChecked = true
             }
-            count_of_events_input.setText(intent.getIntExtra("eventsCount", 0).toString())
-            time_interval_input.setText(intent.getStringExtra("timeIntervalType"))
+            count_of_events_input.setText(intent.getIntExtra(EVENTS_COUNT, 0).toString())
+            currentTimeIntervalTypeId = intent.getIntExtra(TIME_INTERVAL_TYPE, -1)
+            time_interval_input.setText(getString(currentTimeIntervalTypeId))
 
-            button.text = resources.getString(R.string.edit_button_text)
+            button.text = resources.getString(R.string.editButtonText)
 
             resultCode = HabitsList.RESULT_EDITING_OK
 
         }
     }
+
+    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        return
+    }
+
+    override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        currentTimeIntervalTypeId = TimeIntervalType.values().find { getString(it.resId)  == text.toString()}?.resId ?: -1
+    }
+
+    override fun afterTextChanged(p0: Editable?) {
+        return
+    }
+
 }

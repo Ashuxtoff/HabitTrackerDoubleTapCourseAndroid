@@ -1,11 +1,16 @@
 package com.example.task3.objects
 
-enum class HabitType(val value : String) {
-    BAD("bad"),
-    NEUTRAL("neutral"),
-    USEFUL("useful");
+import com.example.task3.R
+
+enum class HabitType(val resId : Int) {
+    BAD(R.string.usefulHabitKey),
+    NEUTRAL(R.string.neutralHabitKey),
+    USEFUL(R.string.badHabitKey);
 
     companion object {
-        fun from(findValue: String): HabitType = values().first { it.value == findValue }
+        fun from(findValue: Int): HabitType {
+            return values().first { it.resId == findValue }
+
+        } // почему-то не совпадают id ресурсов
     }
 }

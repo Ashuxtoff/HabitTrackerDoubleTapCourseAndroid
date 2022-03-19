@@ -3,27 +3,21 @@ package com.example.task3.objects
 import java.util.*
 
 class Habit(
-    var title: String, var description: String, var priority: Int, typeString : String,
-    var eventsCount: Int, timeIntervalTypeString : String) {
+    var title: String, var description: String, var priority: Int, var type : HabitType, // можно сразу предавать тип
+    var eventsCount: Int, var timeIntervalType : TimeIntervalType) {
 
-    var type : HabitType = initializeType(typeString)
-    var timeIntervalType : TimeIntervalType = initializeTimeIntervalType(timeIntervalTypeString)
     val uniqueId = UUID.randomUUID().toString()
-
-    private fun initializeType(typeString : String) = HabitType.from(typeString ?: "neutral")
-
-    private fun initializeTimeIntervalType(timeIntervalTypeString : String) = TimeIntervalType.from(timeIntervalTypeString ?: "days")
 
 
     fun edit(newTitle : String, newDescription : String, newPriority: Int,
-                  newTypeString : String, newEventsCount : Int, newTimeIntervalTypeString : String) {
+                  newType : HabitType, newEventsCount : Int, newTimeIntervalType : TimeIntervalType) {
 
         title = newTitle
         description = newDescription
         priority = newPriority
-        type = initializeType(newTypeString)
+        type = newType
         eventsCount = newEventsCount
-        timeIntervalType = initializeTimeIntervalType(newTimeIntervalTypeString)
+        timeIntervalType = newTimeIntervalType
     }
 
 

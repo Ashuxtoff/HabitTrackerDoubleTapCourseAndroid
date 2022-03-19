@@ -1,13 +1,15 @@
 package com.example.task3.objects
 
-enum class TimeIntervalType(val value : String) {
-    HOURS("hour"),
-    DAYS("day"),
-    WEEKS("week"),
-    MONTHS("month");
+import com.example.task3.R
+
+enum class TimeIntervalType(val resId : Int) {
+    HOURS(R.string.hourTimeIntervalKey),
+    DAYS(R.string.dayTimeIntervalKey),
+    WEEKS(R.string.weekTimeIntervalKey),
+    MONTHS(R.string.monthTimeIntervalKey);
 
 
     companion object {
-        fun from(findValue: String): TimeIntervalType = values().first { it.value == findValue }
+        fun from(findValue: Int): TimeIntervalType = values().first { it.resId == findValue }
     }
 }

@@ -1,25 +1,27 @@
 package com.example.task3
 
-import android.content.Context
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task3.objects.Habit
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_habit_list.*
-import com.example.task3.R
 
 
 class HabitsListViewHolder(override val containerView : View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
-    fun bind(habit : Habit, clickListener: OnItemClickListener, context : Context) {
+    fun bind(habit : Habit, clickListener: OnItemClickListener) {
         habit_title.text = habit.title //пока я не сделал apply plugin в build.gradle и experimental = true, у меня не получалось увидеть это поле. Почему так, и правильно ли я решил проблему?
         habit_description.text = habit.description
         habit_priority.text = habit.priority.toString()
-        habit_type.text = habit.type.value
-        habit_periodicity.text = "${habit.eventsCount} per ${habit.timeIntervalType.value}"
+        habit_type.text = containerView.context.getString(habit.type.resId) // все это передам в гет стринг
+        //habit_periodicity.text = "${habit.eventsCount} per ${habit.timeIntervalType.value}"
 
-        //habit_periodicity.text = context.getString(R.string.periodicity_value_string, habit.eventsCount, habit.timeIntervalType.value)
+        habit_periodicity.text = containerView.context.getString(R.string.periodicityValueString, habit.eventsCount,
+            containerView.context.getString(habit.timeIntervalType.resId))
         // почему так не получилось?
+        // можно брать контекст из вью
+
+
 
         containerView.setOnClickListener {
             clickListener.onItemClicked(habit)

@@ -8,8 +8,7 @@ import com.example.task3.objects.Habit
 import com.example.task3.HabitsListViewHolder
 
 class HabitsListAdapter(private val habits: List<Habit>,
-                        private val itemClickListener: OnItemClickListener,
-                        private val context : Context) :
+                        private val itemClickListener: OnItemClickListener) :
     RecyclerView.Adapter<HabitsListViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitsListViewHolder {
@@ -18,7 +17,7 @@ class HabitsListAdapter(private val habits: List<Habit>,
     }
 
     override fun onBindViewHolder(holder: HabitsListViewHolder, position: Int) {
-        holder.bind(habits[position], itemClickListener, context)
+        holder.bind(habits[position], itemClickListener)
     }
 
     override fun getItemCount(): Int = habits.size
