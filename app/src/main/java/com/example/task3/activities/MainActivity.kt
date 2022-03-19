@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.habit_list.*
 
 
 
-class HabitsList : AppCompatActivity(), OnItemClickListener {
+class MainActivity : AppCompatActivity(), OnItemClickListener {
 
     private var habits : MutableList<Habit> = mutableListOf()
 
@@ -46,7 +46,7 @@ class HabitsList : AppCompatActivity(), OnItemClickListener {
             Habit("1st", "1st", 1, HabitType.USEFUL, 1, TimeIntervalType.DAYS)
         )
         habits.add(
-            Habit("2nd", "2nd", 2, HabitType.NEUTRAL, 2, TimeIntervalType.WEEKS)
+            Habit("2nd", "2nd", 2, HabitType.USEFUL, 2, TimeIntervalType.WEEKS)
         )
         habits.add(
             Habit("3rd", "3rd", 3, HabitType.BAD, 3, TimeIntervalType.MONTHS)

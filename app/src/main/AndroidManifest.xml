@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Task3" >
         <activity
-            android:name=".activities.HabitsList"
+            android:name=".activities.MainActivity"
             android:exported="true">
 
             <intent-filter>

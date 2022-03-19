@@ -14,19 +14,16 @@
     <string name="hintDescription">Describe your habit</string>
     <string name="hintPriority">Set priority of your habit</string>
     <string name="hintEventsCountUseful">How many times do you want to do it?</string>
-    <string name="hintEventsCountNeutral">How many times do you do it?</string>
     <string name="hintEventsCountBad">What is the limit of this for you?</string>
     <string name="hintTypeOfTimeInterval">Select time interval</string>
 
     <string name="usefulRadiobuttonName">Useful</string>
-    <string name="neutralRadiobuttonName">Neutral</string>
     <string name="badRadiobuttonName">Bad</string>
 
     <string name="addButtonText">Add habit</string>
     <string name="editButtonText">Edit habit</string>
 
     <string name="usefulHabitKey">Useful</string>
-    <string name="neutralHabitKey">Neutral</string>
     <string name="badHabitKey">Bad</string>
 
     <string name="hourTimeIntervalKey">hour</string>

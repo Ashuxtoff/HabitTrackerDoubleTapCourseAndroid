@@ -73,11 +73,6 @@
             android:textSize="16sp"
             style="@style/formFieldsBasicParameters"/>
 
-        <RadioButton
-            android:id="@+id/neutral_type_radiobutton"
-            android:text="@string/neutralRadiobuttonName"
-            android:textSize="16sp"
-            style="@style/formFieldsBasicParameters"/>
 
         <RadioButton
             android:id="@+id/bad_type_radiobutton"

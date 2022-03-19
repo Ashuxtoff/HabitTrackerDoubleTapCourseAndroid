@@ -25,7 +25,7 @@ class HabitCreatingForm : AppCompatActivity(), TextWatcher {
 
     private val priorities get() = resources.getStringArray(R.array.priorities)
     private val typesOfTimeInterval get() = TimeIntervalType.values().map { getString(it.resId) }
-    private var currentTypeId = 0
+    private var currentTypeId = R.string.usefulHabitKey
     private var currentTimeIntervalTypeId = -1
     private var resultCode = 0
 
@@ -49,10 +49,6 @@ class HabitCreatingForm : AppCompatActivity(), TextWatcher {
             count_of_events_input.hint = getString(R.string.hintEventsCountUseful)
         }
 
-        neutral_type_radiobutton.setOnClickListener {
-            currentTypeId = R.string.neutralHabitKey
-            count_of_events_input.hint = getString(R.string.hintEventsCountNeutral)
-        }
 
         bad_type_radiobutton.setOnClickListener {
             currentTypeId = R.string.badHabitKey
@@ -62,7 +58,33 @@ class HabitCreatingForm : AppCompatActivity(), TextWatcher {
         useful_type_radiobutton.isChecked = true
         count_of_events_input.hint = getString(R.string.hintEventsCountUseful)
 
-        resultCode = HabitsList.RESULT_CREATING_OK
+        resultCode = MainActivity.RESULT_CREATING_OK
+
+
+        if (intent.hasExtra(ID)) {
+            title_input.setText(intent.getStringExtra(TITLE))
+            description_input.setText(intent.getStringExtra(DESCRIPTION))
+            priority_input.setText(intent.getIntExtra(PRIORITY, -1).toString())
+            when (intent.getIntExtra(TYPE, -1)) {
+                R.string.usefulHabitKey -> {
+                    useful_type_radiobutton.isChecked = true
+                    currentTypeId = R.string.usefulHabitKey
+                }
+                R.string.badHabitKey -> {
+                    bad_type_radiobutton.isChecked = true
+                    currentTypeId = R.string.badHabitKey
+                }
+            }
+            count_of_events_input.setText(intent.getIntExtra(EVENTS_COUNT, 0).toString())
+            currentTimeIntervalTypeId = intent.getIntExtra(TIME_INTERVAL_TYPE, -1)
+            time_interval_input.setText(getString(currentTimeIntervalTypeId))
+
+            button.text = resources.getString(R.string.editButtonText)
+
+            resultCode = MainActivity.RESULT_EDITING_OK
+
+        }
+
 
         button.setOnClickListener {
 
@@ -76,11 +98,12 @@ class HabitCreatingForm : AppCompatActivity(), TextWatcher {
                 return@setOnClickListener
             }
 
-            val listIntent = Intent(this, HabitsList::class.java).apply {
+            val listIntent = Intent(this, MainActivity::class.java).apply {
                 val bundle = Bundle().apply {
-                    putExtra(TITLE, title) //todo вынести константы
+                    putExtra(TITLE, title)
                     putExtra(DESCRIPTION, description)
                     putExtra(PRIORITY, priorityString.toInt())
+                    val a = currentTypeId
                     putExtra(TYPE, currentTypeId)
                     putExtra(EVENTS_COUNT, countOfEventsString.toInt())
                     putExtra(TIME_INTERVAL_TYPE, currentTimeIntervalTypeId)
@@ -94,24 +117,6 @@ class HabitCreatingForm : AppCompatActivity(), TextWatcher {
             finish()
         }
 
-        if (intent.hasExtra(ID)) {
-            title_input.setText(intent.getStringExtra(TITLE))
-            description_input.setText(intent.getStringExtra(DESCRIPTION))
-            priority_input.setText(intent.getIntExtra(PRIORITY, -1).toString())
-            when (intent.getIntExtra(TYPE, -1)) {
-                R.string.usefulHabitKey -> useful_type_radiobutton.isChecked = true
-                R.string.neutralHabitKey -> neutral_type_radiobutton.isChecked = true
-                R.string.badHabitKey -> bad_type_radiobutton.isChecked = true
-            }
-            count_of_events_input.setText(intent.getIntExtra(EVENTS_COUNT, 0).toString())
-            currentTimeIntervalTypeId = intent.getIntExtra(TIME_INTERVAL_TYPE, -1)
-            time_interval_input.setText(getString(currentTimeIntervalTypeId))
-
-            button.text = resources.getString(R.string.editButtonText)
-
-            resultCode = HabitsList.RESULT_EDITING_OK
-
-        }
     }
 
     override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
