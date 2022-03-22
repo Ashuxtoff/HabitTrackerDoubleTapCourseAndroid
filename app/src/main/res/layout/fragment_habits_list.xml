@@ -5,7 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.HabitsListFragment">
+    tools:context=".fragments.HabitsListFragment"
+    android:background="#EEEEEE"
+    >
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/habitsRecyclerView"
@@ -31,5 +33,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@android:drawable/ic_input_add" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

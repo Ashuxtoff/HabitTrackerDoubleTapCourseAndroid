@@ -1,7 +1,8 @@
 package com.example.task4
 
 import com.example.task3.objects.Habit
+import com.example.task4.fragments.FormFragment
 
 interface FormResultCallback {
-    fun processForm(resultHabit : Habit?, habitId : String?)
+    fun processForm(fragment : FormFragment, resultHabit : Habit?, habitId : String?)
 }

@@ -3,8 +3,8 @@ package com.example.task3.objects
 import com.example.task4.R
 
 enum class HabitType(val resId : Int) {
-    BAD(R.string.usefulHabitKey),
-    USEFUL(R.string.badHabitKey);
+    USEFUL(R.string.usefulHabitKey),
+    BAD(R.string.badHabitKey);
 
     companion object {
         fun from(findValue: Int): HabitType {

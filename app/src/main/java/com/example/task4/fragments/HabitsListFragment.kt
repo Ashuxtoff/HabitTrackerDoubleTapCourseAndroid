@@ -7,11 +7,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.viewpager2.widget.ViewPager2
 import com.example.task3.HabitsListAdapter
 import com.example.task3.OnItemClickListener
 import com.example.task3.objects.Habit
 import com.example.task4.FormOpeningCallback
 import com.example.task4.R
+import com.example.task4.viewPager2Entities.HabitsListViewPagerAdapter
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_habits_list.*
 import java.util.ArrayList
 
@@ -42,10 +46,6 @@ class HabitsListFragment : Fragment(), OnItemClickListener {
         callback = activity as FormOpeningCallback
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_habits_list, container, false)
     }
@@ -60,8 +60,8 @@ class HabitsListFragment : Fragment(), OnItemClickListener {
         addHabit.setOnClickListener {
             callback?.openForm(null)
         }
-    }
 
+    }
 
     override fun onItemClicked(habit: Habit) {
         callback?.openForm(habit)

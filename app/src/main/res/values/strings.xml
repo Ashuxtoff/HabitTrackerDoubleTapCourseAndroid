@@ -33,6 +33,8 @@
 
     <string name="emptyRequiredFieldsToast">Please, fill all required fields</string>
 
+    <string name="errorText">ERROR TEXT FROM RESOURCES</string>
+
     <string-array name="timeIntervalTypes">
         <item>hour</item>
         <item>day</item>

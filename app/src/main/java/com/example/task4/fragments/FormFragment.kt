@@ -156,7 +156,7 @@ class FormFragment : Fragment(), TextWatcher {
                 )
             }
 
-            callback?.processForm(resultHabit, arguments?.getString(ID_ARG))
+            callback?.processForm(this, resultHabit, arguments?.getString(ID_ARG))
         }
     }
 
