@@ -2,22 +2,24 @@ package com.example.task4
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.viewpager2.widget.ViewPager2
+import android.view.MenuItem
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.view.GravityCompat
 import com.example.task3.objects.Habit
 import com.example.task3.objects.HabitType
 import com.example.task3.objects.TimeIntervalType
-import com.example.task4.fragments.BaseHabitListFragment
+import com.example.task4.fragments.AppInformationFragment
+import com.example.task4.fragments.BaseHabitsListFragment
 import com.example.task4.fragments.FormFragment
 import com.example.task4.fragments.HabitsListFragment
-import com.example.task4.viewPager2Entities.HabitsListViewPagerAdapter
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity :
     AppCompatActivity(),
     FormOpeningCallback,
-    FormResultCallback {
+    FormResultCallback,
+    NavigationView.OnNavigationItemSelectedListener {
 
 
     companion object {
@@ -26,30 +28,19 @@ class MainActivity :
     }
 
     private var habits : MutableList<Habit> = mutableListOf()
-//    private lateinit var viewPagerViewPagerAdapter : HabitsListViewPagerAdapter
-//    private lateinit var habitsListViewPager : ViewPager2
-//    private lateinit var listsTabLayout: TabLayout
-//    private lateinit var tabsMediator: TabLayoutMediator
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        viewPagerViewPagerAdapter = HabitsListViewPagerAdapter(this, habits)
-//        habitsListViewPager = viewPager
-//        habitsListViewPager.adapter = viewPagerViewPagerAdapter
-//
-//        listsTabLayout = tabLayout
-//        tabsMediator = TabLayoutMediator(listsTabLayout, habitsListViewPager) { tab, position ->
-//            tab.text = when (position) {
-//                0 -> getString(R.string.usefulHabitKey)
-//                1 -> getString(R.string.badHabitKey)
-//                else -> getString(R.string.errorText)
-//            }
-//        }
-//
-//        tabsMediator.attach()
+        val drawerToggle = ActionBarDrawerToggle(this, navigationDrawerLayout, R.string.openDrawer, R.string.closeDrawer)
+        navigationDrawerLayout.addDrawerListener(drawerToggle)
+        drawerToggle.syncState() // cинхронизирует стотояние бургера или стрелка назад при открывании/закрывании меню
+        navigationViewMenu.setNavigationItemSelectedListener(this)
+
+        setSupportActionBar(toolbar)
+        supportActionBar?.setTitle(R.string.habitsListToolbarTitle)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 
         habits.add(
@@ -58,16 +49,11 @@ class MainActivity :
 
         supportFragmentManager
             .beginTransaction()
-            .add(R.id.fragmentPlaceholder, BaseHabitListFragment.newInstance(habits))
-                //.replace(R.id.fragmentPlaceholder, HabitsListFragment.newInstance(habits.filter { it.type == HabitType.USEFUL }))
+            .add(R.id.fragmentPlaceholder, BaseHabitsListFragment.newInstance(habits))
             .commit()
     }
 
     override fun openForm(habitForEditing: Habit?) {
-
-//        habitsListViewPager.isUserInputEnabled = false
-//        habitsListViewPager.adapter = null
-
 
         supportFragmentManager
             .beginTransaction()
@@ -97,13 +83,61 @@ class MainActivity :
 
         supportFragmentManager
             .beginTransaction()
-            .add(R.id.fragmentPlaceholder, BaseHabitListFragment.newInstance(habits))
+            .add(R.id.fragmentPlaceholder, BaseHabitsListFragment.newInstance(habits))
             .commit()
 
-//        habitsListViewPager.isUserInputEnabled = true
-//        habitsListViewPager.adapter = viewPagerViewPagerAdapter
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menuItemStartScreen -> {
+                navigationDrawerLayout.closeDrawer(GravityCompat.START)
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.fragmentPlaceholder, BaseHabitsListFragment.newInstance(habits))
+                    .commit()
+            }
+
+            R.id.menuItemAppInformation -> {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.fragmentPlaceholder, AppInformationFragment.newInstance())
+                    .commit()
+            }
+        }
+        navigationDrawerLayout.closeDrawer(GravityCompat.START)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item : MenuItem): Boolean {
+
+        if (item.itemId == android.R.id.home) {
+
+            if (navigationDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+                navigationDrawerLayout.closeDrawer(GravityCompat.START)
+                return true
+            }
+
+            val currentFragment =
+                supportFragmentManager.fragments.last().childFragmentManager.fragments.find { it.isVisible }
+                ?:
+                supportFragmentManager.fragments.last()
 
 
-//        supportFragmentManager.popBackStack() почему-то не работает :(
+            if (currentFragment != null &&
+                (currentFragment is AppInformationFragment || currentFragment is FormFragment)
+            ) {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.fragmentPlaceholder, BaseHabitsListFragment.newInstance(habits))
+                    .commit()
+            }
+
+            if (currentFragment != null && currentFragment is HabitsListFragment) {
+                navigationDrawerLayout.openDrawer(GravityCompat.START)
+            }
+        }
+
+        return true
     }
 }

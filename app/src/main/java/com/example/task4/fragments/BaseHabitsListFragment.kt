@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.fragment_base_habit_list.*
 import java.util.ArrayList
 
 
-class BaseHabitListFragment : Fragment() {
+class BaseHabitsListFragment : Fragment() {
     private lateinit var viewPagerViewPagerAdapter : HabitsListViewPagerAdapter
     private lateinit var habitsListViewPager : ViewPager2
     private lateinit var listsTabLayout: TabLayout
@@ -27,8 +27,8 @@ class BaseHabitListFragment : Fragment() {
     companion object {
         private const val HABITS_LIST_ARGS = "habitsList"
 
-        fun newInstance(habitsForViewing : List<Habit>) : BaseHabitListFragment {
-            val fragment = BaseHabitListFragment()
+        fun newInstance(habitsForViewing : List<Habit>) : BaseHabitsListFragment {
+            val fragment = BaseHabitsListFragment()
             val bundle = Bundle().apply {
                 putParcelableArrayList(
                     HABITS_LIST_ARGS,

@@ -16,6 +16,7 @@ import com.example.task3.objects.HabitType
 import com.example.task3.objects.TimeIntervalType
 import com.example.task4.FormOpeningCallback
 import com.example.task4.FormResultCallback
+import com.example.task4.MainActivity
 import com.example.task4.R
 import kotlinx.android.synthetic.main.fragment_form.*
 
@@ -65,6 +66,15 @@ class FormFragment : Fragment(), TextWatcher {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val activity = activity as MainActivity
+
+        if (arguments == null) {
+            activity.supportActionBar?.setTitle(R.string.addHabitToolbarTitle)
+        }
+        else {
+            activity.supportActionBar?.setTitle(R.string.editHabitToolbarTitle)
+        }
 
         priority_input.setAdapter(
             ArrayAdapter(view.context, android.R.layout.simple_dropdown_item_1line, priorities)

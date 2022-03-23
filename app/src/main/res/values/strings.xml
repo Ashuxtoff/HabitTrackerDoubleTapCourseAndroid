@@ -35,6 +35,22 @@
 
     <string name="errorText">ERROR TEXT FROM RESOURCES</string>
 
+    <string name="menuItemStartScreenTitle">Home</string>
+    <string name="menuItemAppInformation">About app</string>
+
+    <string name="openDrawer">Navigation drawer opened</string>
+    <string name="closeDrawer">Navigation drawer closed</string>
+
+    <string name="appInformationAboutAppTitle">About App</string>
+    <string name="appInformationAboutAppValue">This app lets you to manage and monitor your habits</string>
+    <string name="appInformationVersionTitle">Version</string>
+    <string name="appInformationVersionValue">1.0.0-alpha01</string>
+
+    <string name="habitsListToolbarTitle">Habits</string>
+    <string name="addHabitToolbarTitle">Habit adding</string>
+    <string name="editHabitToolbarTitle">Habit editing</string>
+    <string name="aboutAppToolbarTitle">Information</string>
+
     <string-array name="timeIntervalTypes">
         <item>hour</item>
         <item>day</item>
