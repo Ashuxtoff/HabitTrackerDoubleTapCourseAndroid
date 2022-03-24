@@ -18,7 +18,7 @@ import java.util.ArrayList
 
 
 class BaseHabitsListFragment : Fragment() {
-    private lateinit var viewPagerViewPagerAdapter : HabitsListViewPagerAdapter
+    private lateinit var viewPagerViewPagerAdapter : HabitsListViewPagerAdapter // убрать
     private lateinit var habitsListViewPager : ViewPager2
     private lateinit var listsTabLayout: TabLayout
     private lateinit var tabsMediator: TabLayoutMediator
@@ -53,7 +53,7 @@ class BaseHabitsListFragment : Fragment() {
 
         activity.supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_burger_menu)
 
-        habits = arguments?.getParcelableArrayList<Habit>(HABITS_LIST_ARGS) as MutableList<Habit>
+        habits = arguments?.getParcelableArrayList<Habit>(HABITS_LIST_ARGS) as? MutableList<Habit>? ?: mutableListOf()
 
         viewPagerViewPagerAdapter = HabitsListViewPagerAdapter(this.requireActivity(), habits)
         habitsListViewPager = viewPager

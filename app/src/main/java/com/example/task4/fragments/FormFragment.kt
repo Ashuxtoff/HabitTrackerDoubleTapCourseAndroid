@@ -1,7 +1,6 @@
 package com.example.task4.fragments
 
 import android.content.Context
-import android.graphics.drawable.AnimatedImageDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,7 +13,6 @@ import android.widget.Toast
 import com.example.task3.objects.Habit
 import com.example.task3.objects.HabitType
 import com.example.task3.objects.TimeIntervalType
-import com.example.task4.FormOpeningCallback
 import com.example.task4.FormResultCallback
 import com.example.task4.MainActivity
 import com.example.task4.R
@@ -56,9 +54,6 @@ class FormFragment : Fragment(), TextWatcher {
         callback = activity as FormResultCallback
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_form, container, false)
@@ -78,11 +73,11 @@ class FormFragment : Fragment(), TextWatcher {
             activity.supportActionBar?.setTitle(R.string.editHabitToolbarTitle)
         }
 
-        priority_input.setAdapter(
+        priorityInput.setAdapter(
             ArrayAdapter(view.context, android.R.layout.simple_dropdown_item_1line, priorities)
         )
 
-        time_interval_input.apply {
+        timeIntervalInput.apply {
             setAdapter(
                 ArrayAdapter(
                     view.context,
@@ -93,41 +88,41 @@ class FormFragment : Fragment(), TextWatcher {
             addTextChangedListener(this@FormFragment)
         }
 
-        useful_type_radiobutton.setOnClickListener {
+        usefulTypeRadiobutton.setOnClickListener {
             currentTypeId = R.string.usefulHabitKey
-            count_of_events_input.hint = getString(R.string.hintEventsCountUseful)
+            countOfEventsInput.hint = getString(R.string.hintEventsCountUseful)
         }
 
-        bad_type_radiobutton.setOnClickListener {
+        badTypeRadiobutton.setOnClickListener {
             currentTypeId = R.string.badHabitKey
-            count_of_events_input.hint = getString(R.string.hintEventsCountBad)
+            countOfEventsInput.hint = getString(R.string.hintEventsCountBad)
         }
 
-        useful_type_radiobutton.isChecked = true
-        count_of_events_input.hint = getString(R.string.hintEventsCountUseful)
+        usefulTypeRadiobutton.isChecked = true
+        countOfEventsInput.hint = getString(R.string.hintEventsCountUseful)
         currentTypeId = R.string.usefulHabitKey
 
         arguments?.let { bundle ->
             val habit = bundle.getParcelable(HABIT_ARG) as Habit?
 
-            title_input.setText(habit?.title)
+            titleInput.setText(habit?.title)
             description_input.setText(habit?.description)
-            priority_input.setText(habit?.priority.toString() as CharSequence)
+            priorityInput.setText(habit?.priority.toString() as CharSequence)
 
             when (habit?.type) {
                 HabitType.USEFUL -> {
-                    useful_type_radiobutton.isChecked = true
+                    usefulTypeRadiobutton.isChecked = true
                     currentTypeId = R.string.usefulHabitKey
                 }
                 HabitType.BAD -> {
-                    bad_type_radiobutton.isChecked = true
+                    badTypeRadiobutton.isChecked = true
                     currentTypeId = R.string.badHabitKey
                 }
             }
 
-            count_of_events_input.setText(habit?.eventsCount.toString() as CharSequence)
+            countOfEventsInput.setText(habit?.eventsCount.toString() as CharSequence)
             currentTimeIntervalTypeId = habit?.timeIntervalType?.resId ?: -1
-            time_interval_input.setText(getText(currentTimeIntervalTypeId))
+            timeIntervalInput.setText(getText(currentTimeIntervalTypeId))
 
             button.text = getString(R.string.editButtonText)
         }
@@ -136,10 +131,10 @@ class FormFragment : Fragment(), TextWatcher {
 
             var resultHabit : Habit? = arguments?.getParcelable(HABIT_ARG) as Habit?
 
-            val title = title_input.text.toString()
+            val title = titleInput.text.toString()
             val description = description_input.text.toString()
-            val priorityString = priority_input.text.toString()
-            val countOfEventsString = count_of_events_input.text.toString()
+            val priorityString = priorityInput.text.toString()
+            val countOfEventsString = countOfEventsInput.text.toString()
 
             if (title.isEmpty() || priorityString.isEmpty() || countOfEventsString.isEmpty() || currentTimeIntervalTypeId == -1) {
                 Toast.makeText(view.context, getString(R.string.emptyRequiredFieldsToast), Toast.LENGTH_SHORT).show()
