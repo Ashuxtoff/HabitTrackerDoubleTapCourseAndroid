@@ -22,6 +22,7 @@ class AppInformationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val activity = activity as MainActivity
         activity.supportActionBar?.setTitle(R.string.aboutAppToolbarTitle)
+        activity.supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
     }
 
     companion object {

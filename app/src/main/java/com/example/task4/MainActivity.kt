@@ -22,11 +22,6 @@ class MainActivity :
     NavigationView.OnNavigationItemSelectedListener {
 
 
-    companion object {
-        private const val ADDING_MODE_KEY = "adding"
-        private const val EDITING_MODE_KEY = "editing"
-    }
-
     private var habits : MutableList<Habit> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +30,7 @@ class MainActivity :
 
         val drawerToggle = ActionBarDrawerToggle(this, navigationDrawerLayout, R.string.openDrawer, R.string.closeDrawer)
         navigationDrawerLayout.addDrawerListener(drawerToggle)
-        drawerToggle.syncState() // cинхронизирует стотояние бургера или стрелка назад при открывании/закрывании меню
+        drawerToggle.syncState() // cинхронизирует стотояние бургера или стрелка назад при открывании/закрывании меню??
         navigationViewMenu.setNavigationItemSelectedListener(this)
 
         setSupportActionBar(toolbar)

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager2.widget.ViewPager2
 import com.example.task3.objects.Habit
+import com.example.task4.MainActivity
 import com.example.task4.R
 import com.example.task4.viewPager2Entities.HabitsListViewPagerAdapter
 import com.google.android.material.tabs.TabLayout
@@ -47,6 +48,10 @@ class BaseHabitsListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val activity = activity as MainActivity
+
+        activity.supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_burger_menu)
 
         habits = arguments?.getParcelableArrayList<Habit>(HABITS_LIST_ARGS) as MutableList<Habit>
 

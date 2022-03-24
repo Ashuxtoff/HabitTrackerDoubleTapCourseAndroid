@@ -69,6 +69,8 @@ class FormFragment : Fragment(), TextWatcher {
 
         val activity = activity as MainActivity
 
+        activity.supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
+
         if (arguments == null) {
             activity.supportActionBar?.setTitle(R.string.addHabitToolbarTitle)
         }
