@@ -106,7 +106,7 @@ class FormFragment : Fragment(), TextWatcher {
             val habit = bundle.getParcelable(HABIT_ARG) as Habit?
 
             titleInput.setText(habit?.title)
-            description_input.setText(habit?.description)
+            descriptionInput.setText(habit?.description)
             priorityInput.setText(habit?.priority.toString() as CharSequence)
 
             when (habit?.type) {
@@ -132,7 +132,7 @@ class FormFragment : Fragment(), TextWatcher {
             var resultHabit : Habit? = arguments?.getParcelable(HABIT_ARG) as Habit?
 
             val title = titleInput.text.toString()
-            val description = description_input.text.toString()
+            val description = descriptionInput.text.toString()
             val priorityString = priorityInput.text.toString()
             val countOfEventsString = countOfEventsInput.text.toString()
 
