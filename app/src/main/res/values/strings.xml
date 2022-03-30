@@ -51,6 +51,10 @@
     <string name="editHabitToolbarTitle">Habit editing</string>
     <string name="aboutAppToolbarTitle">Information</string>
 
+    <string name="bottomSheetTitle">Filtering and sorting</string>
+    <string name="sortByPriority">Sort by priority</string>
+    <string name="searchEditTextHint">Search</string>
+
     <string-array name="timeIntervalTypes">
         <item>hour</item>
         <item>day</item>

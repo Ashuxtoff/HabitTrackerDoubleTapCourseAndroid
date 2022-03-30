@@ -17,12 +17,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity :
     AppCompatActivity(),
-    FormOpeningCallback,
-    FormResultCallback,
     NavigationView.OnNavigationItemSelectedListener {
 
-
-    private var habits : MutableList<Habit> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,51 +33,12 @@ class MainActivity :
         supportActionBar?.setTitle(R.string.habitsListToolbarTitle)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-
-        habits.add(
-            Habit("1st", "1st", 1, HabitType.BAD, 1, TimeIntervalType.DAYS)
-        )
-
         supportFragmentManager
             .beginTransaction()
-            .add(R.id.fragmentPlaceholder, BaseHabitsListFragment.newInstance(habits))
+            .add(R.id.fragmentPlaceholder, BaseHabitsListFragment.newInstance())
             .commit()
     }
 
-    override fun openForm(habitForEditing: Habit?) {
-
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragmentPlaceholder, FormFragment.newInstance(habitForEditing))
-            .commit()
-    }
-
-    override fun processForm(fragment : FormFragment, resultHabit : Habit?, habitId: String?) {
-        val title = resultHabit?.title ?: "untitled"
-        val description = resultHabit?.description ?: ""
-        val priority = resultHabit?.priority ?: -1
-        val type = resultHabit?.type ?: HabitType.USEFUL
-        val eventsCount = resultHabit?.eventsCount ?: -1
-        val timeIntervalType = resultHabit?.timeIntervalType ?: TimeIntervalType.HOURS
-
-        if (habitId == null) {
-            habits.add(Habit(
-                title, description, priority, type, eventsCount, timeIntervalType
-            ))
-        }
-        else {
-            val habitForEdit = habits.find { it.uniqueId == habitId }
-            habitForEdit?.edit(
-                title, description, priority, type, eventsCount, timeIntervalType
-            )
-        }
-
-        supportFragmentManager
-            .beginTransaction()
-            .add(R.id.fragmentPlaceholder, BaseHabitsListFragment.newInstance(habits))
-            .commit()
-
-    }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -89,7 +46,7 @@ class MainActivity :
                 navigationDrawerLayout.closeDrawer(GravityCompat.START)
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.fragmentPlaceholder, BaseHabitsListFragment.newInstance(habits))
+                    .replace(R.id.fragmentPlaceholder, BaseHabitsListFragment.newInstance())
                     .commit()
             }
 
@@ -124,7 +81,7 @@ class MainActivity :
             ) {
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.fragmentPlaceholder, BaseHabitsListFragment.newInstance(habits))
+                    .replace(R.id.fragmentPlaceholder, BaseHabitsListFragment.newInstance())
                     .commit()
             }
 

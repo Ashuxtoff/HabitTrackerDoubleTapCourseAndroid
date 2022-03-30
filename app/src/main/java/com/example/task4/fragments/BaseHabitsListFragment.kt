@@ -6,10 +6,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.example.task3.objects.Habit
 import com.example.task4.MainActivity
 import com.example.task4.R
+import com.example.task4.model.Model
+import com.example.task4.viewModels.HabitsListViewModel
 import com.example.task4.viewPager2Entities.HabitsListViewPagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -18,27 +24,13 @@ import java.util.ArrayList
 
 
 class BaseHabitsListFragment : Fragment() {
-    private lateinit var viewPagerViewPagerAdapter : HabitsListViewPagerAdapter // убрать
-    private lateinit var habitsListViewPager : ViewPager2
-    private lateinit var listsTabLayout: TabLayout
-    private lateinit var tabsMediator: TabLayoutMediator
-
-    private var habits : MutableList<Habit> = mutableListOf()
 
     companion object {
-        private const val HABITS_LIST_ARGS = "habitsList"
+        fun newInstance() : BaseHabitsListFragment = BaseHabitsListFragment()
+    }
 
-        fun newInstance(habitsForViewing : List<Habit>) : BaseHabitsListFragment {
-            val fragment = BaseHabitsListFragment()
-            val bundle = Bundle().apply {
-                putParcelableArrayList(
-                    HABITS_LIST_ARGS,
-                    habitsForViewing as ArrayList<out Parcelable>
-                )
-            }
-            fragment.arguments = bundle
-            return fragment
-        }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -53,13 +45,12 @@ class BaseHabitsListFragment : Fragment() {
 
         activity.supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_burger_menu)
 
-        habits = arguments?.getParcelableArrayList<Habit>(HABITS_LIST_ARGS) as? MutableList<Habit>? ?: mutableListOf()
-
-        viewPagerViewPagerAdapter = HabitsListViewPagerAdapter(this.requireActivity(), habits)
-        habitsListViewPager = viewPager
+        // норм ли, что ут в тэблэйауте потом массив привычек фильтруется? Или это тоже лучше вынести в VM?
+        val viewPagerViewPagerAdapter = HabitsListViewPagerAdapter(this.requireActivity())
+        val habitsListViewPager = viewPager
         habitsListViewPager.adapter = viewPagerViewPagerAdapter
 
-        listsTabLayout = tabLayout
+        val listsTabLayout = tabLayout
         TabLayoutMediator(listsTabLayout, habitsListViewPager) { tab, position ->
             tab.text = when (position) {
                 0 -> getString(R.string.usefulHabitKey)
@@ -67,7 +58,6 @@ class BaseHabitsListFragment : Fragment() {
                 else -> getString(R.string.errorText)
             }
         }.attach()
-
     }
 
 }

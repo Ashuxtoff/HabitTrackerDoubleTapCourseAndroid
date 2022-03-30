@@ -3,16 +3,24 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/ic_arrow_downward.xml" value="0.2155" />
+        <entry key="app/src/main/res/drawable/ic_arrow_downward_active.xml" value="0.22" />
+        <entry key="app/src/main/res/drawable/ic_arrow_upward.xml" value="0.2155" />
+        <entry key="app/src/main/res/drawable/ic_arrow_upward_active.xml" value="0.2155" />
         <entry key="app/src/main/res/drawable/ic_back.xml" value="0.162" />
         <entry key="app/src/main/res/drawable/ic_burger_menu.xml" value="0.162" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.247" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/drawable/ic_sorting_toggle.xml" value="0.2155" />
+        <entry key="app/src/main/res/drawable/ic_sorting_toggle_descending.xml" value="0.2155" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/bottom_sheet.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment1_layout.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/fragment1_layput.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/fragment_app_information.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_base_habit_list.xml" value="0.2318840579710145" />
+        <entry key="app/src/main/res/layout/fragment_bottom_sheet.xml" value="0.2640625" />
         <entry key="app/src/main/res/layout/fragment_form.xml" value="0.26145833333333335" />
-        <entry key="app/src/main/res/layout/fragment_habits_list.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_habits_list.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_habits_list_base_fragment.xml" value="0.2318840579710145" />
         <entry key="app/src/main/res/layout/item_habit_list.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/list_adapter.xml" value="0.37604166666666666" />

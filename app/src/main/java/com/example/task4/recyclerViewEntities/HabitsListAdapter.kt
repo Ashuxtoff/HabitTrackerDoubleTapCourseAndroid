@@ -1,11 +1,9 @@
 package com.example.task3
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task3.objects.Habit
-import com.example.task3.HabitsListViewHolder
 import com.example.task4.R
 
 class HabitsListAdapter(private val habits: List<Habit>,
@@ -22,7 +20,5 @@ class HabitsListAdapter(private val habits: List<Habit>,
     }
 
     override fun getItemCount(): Int = habits.size
-
-
 
 }

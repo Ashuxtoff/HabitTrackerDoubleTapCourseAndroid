@@ -10,12 +10,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.task3.objects.Habit
 import com.example.task3.objects.HabitType
 import com.example.task3.objects.TimeIntervalType
 import com.example.task4.FormResultCallback
 import com.example.task4.MainActivity
 import com.example.task4.R
+import com.example.task4.model.Model
+import com.example.task4.viewModels.FormViewModel
+import com.example.task4.viewModels.HabitsListViewModel
 import kotlinx.android.synthetic.main.fragment_form.*
 
 
@@ -23,9 +29,10 @@ class FormFragment : Fragment(), TextWatcher {
 
     private val priorities get() = resources.getStringArray(R.array.priorities)
     private val typesOfTimeInterval get() = TimeIntervalType.values().map { getString(it.resId) }
-    private var currentTypeId = R.string.usefulHabitKey
+    private var currentType = HabitType.USEFUL
     private var currentTimeIntervalTypeId = -1
-    private var callback: FormResultCallback? = null
+
+    private lateinit var viewModel : FormViewModel
 
 
     companion object {
@@ -49,11 +56,14 @@ class FormFragment : Fragment(), TextWatcher {
         }
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        callback = activity as FormResultCallback
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return FormViewModel(Model) as T
+            }
+        }).get(FormViewModel::class.java)
     }
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_form, container, false)
@@ -89,18 +99,18 @@ class FormFragment : Fragment(), TextWatcher {
         }
 
         usefulTypeRadiobutton.setOnClickListener {
-            currentTypeId = R.string.usefulHabitKey
+            currentType = HabitType.USEFUL
             countOfEventsInput.hint = getString(R.string.hintEventsCountUseful)
         }
 
         badTypeRadiobutton.setOnClickListener {
-            currentTypeId = R.string.badHabitKey
+            currentType = HabitType.BAD
             countOfEventsInput.hint = getString(R.string.hintEventsCountBad)
         }
 
         usefulTypeRadiobutton.isChecked = true
         countOfEventsInput.hint = getString(R.string.hintEventsCountUseful)
-        currentTypeId = R.string.usefulHabitKey
+        currentType = HabitType.USEFUL
 
         arguments?.let { bundle ->
             val habit = bundle.getParcelable(HABIT_ARG) as Habit?
@@ -112,11 +122,11 @@ class FormFragment : Fragment(), TextWatcher {
             when (habit?.type) {
                 HabitType.USEFUL -> {
                     usefulTypeRadiobutton.isChecked = true
-                    currentTypeId = R.string.usefulHabitKey
+                    currentType = HabitType.USEFUL
                 }
                 HabitType.BAD -> {
                     badTypeRadiobutton.isChecked = true
-                    currentTypeId = R.string.badHabitKey
+                    currentType = HabitType.BAD
                 }
             }
 
@@ -129,8 +139,6 @@ class FormFragment : Fragment(), TextWatcher {
 
         button.setOnClickListener {
 
-            var resultHabit : Habit? = arguments?.getParcelable(HABIT_ARG) as Habit?
-
             val title = titleInput.text.toString()
             val description = descriptionInput.text.toString()
             val priorityString = priorityInput.text.toString()
@@ -142,28 +150,35 @@ class FormFragment : Fragment(), TextWatcher {
             }
 
             if (arguments == null) {
-                resultHabit = Habit(
+                viewModel.processForm(
                     title,
                     description,
                     priorityString.toInt(),
-                    HabitType.from(currentTypeId),
+                    currentType,
                     countOfEventsString.toInt(),
-                    TimeIntervalType.from(currentTimeIntervalTypeId)
+                    currentTimeIntervalTypeId,
+                    null
                 )
-
             }
             else {
-                resultHabit?.edit(
+                val resultHabit : Habit? = arguments?.getParcelable(HABIT_ARG) as Habit?
+                val uniqueId = resultHabit?.uniqueId
+
+                viewModel.processForm(
                     title,
                     description,
                     priorityString.toInt(),
-                    HabitType.from(currentTypeId),
+                    currentType,
                     countOfEventsString.toInt(),
-                    TimeIntervalType.from(currentTimeIntervalTypeId)
+                    currentTimeIntervalTypeId,
+                    uniqueId
                 )
             }
 
-            callback?.processForm(this, resultHabit, arguments?.getString(ID_ARG))
+            activity.supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragmentPlaceholder, BaseHabitsListFragment.newInstance())
+                .commit()
         }
     }
 
