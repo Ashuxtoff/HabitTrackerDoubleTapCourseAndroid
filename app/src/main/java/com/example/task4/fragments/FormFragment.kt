@@ -23,6 +23,7 @@ import com.example.task4.model.Model
 import com.example.task4.viewModels.FormViewModel
 import com.example.task4.viewModels.HabitsListViewModel
 import kotlinx.android.synthetic.main.fragment_form.*
+import java.sql.Time
 
 
 class FormFragment : Fragment(), TextWatcher {
@@ -30,7 +31,7 @@ class FormFragment : Fragment(), TextWatcher {
     private val priorities get() = resources.getStringArray(R.array.priorities)
     private val typesOfTimeInterval get() = TimeIntervalType.values().map { getString(it.resId) }
     private var currentType = HabitType.USEFUL
-    private var currentTimeIntervalTypeId = -1
+    private var currentTimeIntervalType = TimeIntervalType.DAYS
 
     private lateinit var viewModel : FormViewModel
 
@@ -131,8 +132,8 @@ class FormFragment : Fragment(), TextWatcher {
             }
 
             countOfEventsInput.setText(habit?.eventsCount.toString() as CharSequence)
-            currentTimeIntervalTypeId = habit?.timeIntervalType?.resId ?: -1
-            timeIntervalInput.setText(getText(currentTimeIntervalTypeId))
+            currentTimeIntervalType = habit?.timeIntervalType ?: TimeIntervalType.DAYS
+            timeIntervalInput.setText(getText(currentTimeIntervalType.resId))
 
             button.text = getString(R.string.editButtonText)
         }
@@ -144,7 +145,7 @@ class FormFragment : Fragment(), TextWatcher {
             val priorityString = priorityInput.text.toString()
             val countOfEventsString = countOfEventsInput.text.toString()
 
-            if (title.isEmpty() || priorityString.isEmpty() || countOfEventsString.isEmpty() || currentTimeIntervalTypeId == -1) {
+            if (title.isEmpty() || priorityString.isEmpty() || countOfEventsString.isEmpty() || timeIntervalInput.text.toString().isEmpty()) {
                 Toast.makeText(view.context, getString(R.string.emptyRequiredFieldsToast), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -156,7 +157,7 @@ class FormFragment : Fragment(), TextWatcher {
                     priorityString.toInt(),
                     currentType,
                     countOfEventsString.toInt(),
-                    currentTimeIntervalTypeId,
+                    currentTimeIntervalType,
                     null
                 )
             }
@@ -170,7 +171,7 @@ class FormFragment : Fragment(), TextWatcher {
                     priorityString.toInt(),
                     currentType,
                     countOfEventsString.toInt(),
-                    currentTimeIntervalTypeId,
+                    currentTimeIntervalType,
                     uniqueId
                 )
             }
@@ -189,7 +190,7 @@ class FormFragment : Fragment(), TextWatcher {
     }
 
     override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
-        currentTimeIntervalTypeId = TimeIntervalType.values().find { getString(it.resId)  == text.toString()}?.resId ?: -1
+        currentTimeIntervalType = TimeIntervalType.values().find { getString(it.resId)  == text.toString()} ?: TimeIntervalType.DAYS
     }
 
     override fun afterTextChanged(p0: Editable?) {

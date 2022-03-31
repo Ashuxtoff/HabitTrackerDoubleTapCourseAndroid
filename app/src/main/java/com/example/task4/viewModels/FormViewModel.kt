@@ -13,10 +13,10 @@ class FormViewModel(private val model: Model) : ViewModel() {
                  priority : Int,
                  type : HabitType,
                  eventsCount : Int,
-                 timeIntervalTypeId : Int,) {
+                 timeIntervalType : TimeIntervalType,) {
 
         model.addHabit(Habit(
-            title, description, priority, type, eventsCount, TimeIntervalType.from(timeIntervalTypeId)
+            title, description, priority, type, eventsCount, timeIntervalType
         ))
     }
 
@@ -25,18 +25,18 @@ class FormViewModel(private val model: Model) : ViewModel() {
                     priority : Int,
                     type : HabitType,
                     eventsCount : Int,
-                    timeIntervalTypeId : Int,
+                    timeIntervalType : TimeIntervalType,
                     uniqueId : String?) {
 
         if (uniqueId != null) {
             val editedHabit = model.getAllHabits().find { it.uniqueId == uniqueId }
             editedHabit?.edit(
-                title, description, priority, type, eventsCount, TimeIntervalType.from(timeIntervalTypeId)
+                title, description, priority, type, eventsCount, timeIntervalType
             )
         }
 
         else {
-            addHabit(title, description, priority, type, eventsCount, timeIntervalTypeId)
+            addHabit(title, description, priority, type, eventsCount, timeIntervalType)
         }
     }
 }

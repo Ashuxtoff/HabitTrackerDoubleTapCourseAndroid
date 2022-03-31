@@ -8,8 +8,4 @@ enum class TimeIntervalType(val resId : Int) {
     WEEKS(R.string.weekTimeIntervalKey),
     MONTHS(R.string.monthTimeIntervalKey);
 
-
-    companion object {
-        fun from(findValue: Int): TimeIntervalType = values().first { it.resId == findValue }
-    }
 }
