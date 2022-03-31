@@ -53,7 +53,7 @@ class HabitsListFragment : Fragment(), OnItemClickListener {
         childFragmentManager
             .beginTransaction()
             .add(R.id.bottomSheetFragmentPlaceholder, BottomSheetFragment())
-            .commit()
+            .commitNow()
 
 
         viewModel.currentHabitsList.observe(this.activity as LifecycleOwner, Observer {
@@ -62,16 +62,7 @@ class HabitsListFragment : Fragment(), OnItemClickListener {
             habits.addAll(it)
             habitsRecyclerView.adapter?.notifyDataSetChanged()
 
-        // проблема: перестает работать вьюпейджер2:
-        // Мы переходим на список плохих привычек - все ок
-        // возвращаемся на список хороших - отображаются по-прежнему плозие привычки.
-        // В отладчике смотрел - не запускается создание фрагментов во вьюпейджере
-        // если убрать последнюю строчку с нотифаем - то данные в списке при сортировке/фильтрации не будут обновляться
-        // но вьюпейджер работать будет
 
-
-
-//      viewPager.adapter?.notifyDataSetChanged()
         })
 
         habitsRecyclerView.adapter = HabitsListAdapter(habits, this)
@@ -84,6 +75,13 @@ class HabitsListFragment : Fragment(), OnItemClickListener {
         }
 
     }
+
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.setCurrentHabitsList(arguments?.getBoolean(HABITS_LIST_ARGS) ?: true)
+    }
+
 
     override fun onItemClicked(habit: Habit) {
         activity?.supportFragmentManager

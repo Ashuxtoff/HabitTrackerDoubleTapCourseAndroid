@@ -19,10 +19,11 @@ class HabitsListViewModel(private val model : Model) : ViewModel() {
     private val mutableSortingMode: MutableLiveData<String?> = MutableLiveData()
     private val mutableSearchQuery: MutableLiveData<String> = MutableLiveData()
 
-
     val currentHabitsList: LiveData<List<Habit>> = mutableCurrentHabitsList
     val sortingMode : LiveData<String?> = mutableSortingMode
     val searchQuery : LiveData<String> = mutableSearchQuery
+
+    private val previousSearchQuery : String = EMPTY_STRING
 
     init {
         mutableCurrentHabitsList.value = model.getAllHabits()
@@ -36,20 +37,12 @@ class HabitsListViewModel(private val model : Model) : ViewModel() {
 
     fun setSortingMode(mode : String?) {
         mutableSortingMode.value = mode
-        applySorting()
+        calculateCurrentHabitsList()
     }
 
     fun setSearchQuery(query : String?) {
         mutableSearchQuery.value = query
-        applySearch(false)
-    }
-
-    private fun applySorting() {
-        mutableCurrentHabitsList.value = when (mutableSortingMode.value) {
-            ASCENDING_SORTING_MODE -> mutableCurrentHabitsList.value?.sortedBy { it.priority }
-            DESCENDING_SORTING_MODE -> mutableCurrentHabitsList.value?.sortedByDescending { it.priority }
-            else -> mutableCurrentHabitsList.value
-        }
+        calculateCurrentHabitsList()
     }
 
     private fun applyCurrentList() {
@@ -61,22 +54,22 @@ class HabitsListViewModel(private val model : Model) : ViewModel() {
         }
     }
 
-    private fun calculateCurrentHabitsList() {
-        applyCurrentList()
-        applySearch(true)
-        applySorting()
+    private fun applySorting() {
+        mutableCurrentHabitsList.value = when (mutableSortingMode.value) {
+            ASCENDING_SORTING_MODE -> mutableCurrentHabitsList.value?.sortedBy { it.priority }
+            DESCENDING_SORTING_MODE -> mutableCurrentHabitsList.value?.sortedByDescending { it.priority }
+            else -> mutableCurrentHabitsList.value
+        }
     }
 
-    private fun applySearch(currentListChangedNow : Boolean) {
-        if (currentListChangedNow) {
-            mutableCurrentHabitsList.value = mutableCurrentHabitsList.value?.filter { it.title.contains(mutableSearchQuery.value.toString()) }
-        }
-        else {
-            applyCurrentList()
-            mutableCurrentHabitsList.value = mutableCurrentHabitsList.value?.filter { it.title.contains(mutableSearchQuery.value.toString()) }
-            applySorting()
-        }
+    private fun applySearch() {
+        mutableCurrentHabitsList.value = mutableCurrentHabitsList.value?.filter { it.title.contains(mutableSearchQuery.value.toString()) }
+    }
 
 
+    private fun calculateCurrentHabitsList() {
+        applyCurrentList()
+        applySorting()
+        applySearch()
     }
 }

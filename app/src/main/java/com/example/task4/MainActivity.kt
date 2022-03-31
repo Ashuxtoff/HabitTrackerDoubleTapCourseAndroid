@@ -8,10 +8,7 @@ import androidx.core.view.GravityCompat
 import com.example.task3.objects.Habit
 import com.example.task3.objects.HabitType
 import com.example.task3.objects.TimeIntervalType
-import com.example.task4.fragments.AppInformationFragment
-import com.example.task4.fragments.BaseHabitsListFragment
-import com.example.task4.fragments.FormFragment
-import com.example.task4.fragments.HabitsListFragment
+import com.example.task4.fragments.*
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -85,7 +82,8 @@ class MainActivity :
                     .commit()
             }
 
-            if (currentFragment != null && currentFragment is HabitsListFragment) {
+            if (currentFragment != null &&
+                (currentFragment is BottomSheetFragment || currentFragment is HabitsListFragment)) {
                 navigationDrawerLayout.openDrawer(GravityCompat.START)
             }
         }

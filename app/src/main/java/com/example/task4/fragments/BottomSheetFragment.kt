@@ -72,9 +72,6 @@ class BottomSheetFragment : BottomSheetDialogFragment(), TextWatcher {
                 viewModel.setSortingMode(null)
             }
 
-//            if (descendingSortingControl.isChecked) {
-//                descendingSortingControl.isChecked = false
-//            }
         }
 
         descendingSortingControl.setOnClickListener {
@@ -85,9 +82,6 @@ class BottomSheetFragment : BottomSheetDialogFragment(), TextWatcher {
                 viewModel.setSortingMode(null)
             }
 
-//            if (ascendingSortingControl.isChecked) {
-//                ascendingSortingControl.isChecked = false
-//            }
         }
     }
 
