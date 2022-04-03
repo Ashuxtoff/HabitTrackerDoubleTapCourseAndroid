@@ -3,13 +3,12 @@ package com.example.task4.fragments
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.*
 import com.example.task4.R
-import com.example.task4.model.Model
+import com.example.task4.repository.Repository
 import com.example.task4.viewModels.HabitsListViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_bottom_sheet.*
@@ -27,7 +26,7 @@ class BottomSheetFragment : BottomSheetDialogFragment(), TextWatcher {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this.requireActivity(), object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return HabitsListViewModel(Model) as T
+                return HabitsListViewModel(Repository(requireContext())) as T
             }
         }).get(HabitsListViewModel::class.java)
     }

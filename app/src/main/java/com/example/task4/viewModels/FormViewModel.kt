@@ -4,18 +4,18 @@ import androidx.lifecycle.ViewModel
 import com.example.task3.objects.Habit
 import com.example.task3.objects.HabitType
 import com.example.task3.objects.TimeIntervalType
-import com.example.task4.model.Model
+import com.example.task4.repository.Repository
 
-class FormViewModel(private val model: Model) : ViewModel() {
+class FormViewModel(private val repository: Repository) : ViewModel() {
 
     private fun addHabit(title : String,
-                 description : String,
-                 priority : Int,
-                 type : HabitType,
-                 eventsCount : Int,
-                 timeIntervalType : TimeIntervalType,) {
+                         description : String,
+                         priority : Int,
+                         type : HabitType,
+                         eventsCount : Int,
+                         timeIntervalType : TimeIntervalType,) {
 
-        model.addHabit(Habit(
+        repository.addHabit(Habit(
             title, description, priority, type, eventsCount, timeIntervalType
         ))
     }
@@ -29,10 +29,11 @@ class FormViewModel(private val model: Model) : ViewModel() {
                     uniqueId : String?) {
 
         if (uniqueId != null) {
-            val editedHabit = model.getAllHabits().find { it.uniqueId == uniqueId }
-            editedHabit?.edit(
-                title, description, priority, type, eventsCount, timeIntervalType
-            )
+            val habit = repository.getHabitById(uniqueId).value
+            if (habit != null) {
+                habit.edit(title, description, priority, type, eventsCount, timeIntervalType)
+                repository.editHabit(habit)
+            }
         }
 
         else {

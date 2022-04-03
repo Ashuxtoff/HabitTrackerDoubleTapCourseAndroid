@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.task3.objects.Habit
-import com.example.task4.model.Model
+import com.example.task4.repository.Repository
 
-class HabitsListViewModel(private val model : Model) : ViewModel() {
+class HabitsListViewModel(private val repository : Repository) : ViewModel() {
 
     companion object {
         private const val ASCENDING_SORTING_MODE = "ascending"
@@ -26,7 +26,7 @@ class HabitsListViewModel(private val model : Model) : ViewModel() {
     private val previousSearchQuery : String = EMPTY_STRING
 
     init {
-        mutableCurrentHabitsList.value = model.getAllHabits()
+        mutableCurrentHabitsList.value = repository.getAllHabits().value
         mutableSearchQuery.value = EMPTY_STRING
     }
 
@@ -47,10 +47,10 @@ class HabitsListViewModel(private val model : Model) : ViewModel() {
 
     private fun applyCurrentList() {
         if (mutableIsUsefulCurrent.value == true) {
-            mutableCurrentHabitsList.value = model.getUsefulHabits()
+            mutableCurrentHabitsList.value = repository.getUsefulHabits().value
         }
         else {
-            mutableCurrentHabitsList.value = model.getBadHabits()
+            mutableCurrentHabitsList.value = repository.getBadHabits().value
         }
     }
 

@@ -1,5 +1,6 @@
 package com.example.task4.fragments
 
+import android.app.Application
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,10 +14,9 @@ import com.example.task3.HabitsListAdapter
 import com.example.task3.OnItemClickListener
 import com.example.task3.objects.Habit
 import com.example.task4.R
-import com.example.task4.model.Model
+import com.example.task4.repository.Repository
 import com.example.task4.viewModels.HabitsListViewModel
 import kotlinx.android.synthetic.main.fragment_habits_list.*
-import kotlinx.android.synthetic.main.fragment_base_habit_list.*
 import kotlin.random.Random
 
 
@@ -37,7 +37,7 @@ class HabitsListFragment : Fragment(), OnItemClickListener {
         viewModel = ViewModelProvider(this.requireActivity(), object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 //return HabitsListViewModel(Model, arguments?.getBoolean(HABITS_LIST_ARGS) ?: true) as T
-                return HabitsListViewModel(Model) as T
+                return HabitsListViewModel(Repository(requireContext())) as T
             }
         }).get(HabitsListViewModel::class.java)
         viewModel.setCurrentHabitsList(arguments?.getBoolean(HABITS_LIST_ARGS) ?: true)
@@ -89,7 +89,5 @@ class HabitsListFragment : Fragment(), OnItemClickListener {
             ?.replace(R.id.fragmentPlaceholder, FormFragment.newInstance(habit))
             ?.commit()
     }
-
-
 
 }

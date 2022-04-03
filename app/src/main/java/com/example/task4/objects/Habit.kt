@@ -2,15 +2,27 @@ package com.example.task3.objects
 
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
 @Parcelize
+@Entity(tableName = "habits")
 class Habit(
-    var title: String, var description: String, var priority: Int, var type : HabitType, // можно сразу предавать тип
-    var eventsCount: Int, var timeIntervalType : TimeIntervalType) : Parcelable {
+    @ColumnInfo var title: String,
+    @ColumnInfo var description: String,
+    @ColumnInfo var priority: Int,
+    @Embedded var type : HabitType,
+    @ColumnInfo(name = "events_count") var eventsCount: Int,
+    @Embedded var timeIntervalType : TimeIntervalType
+) : Parcelable {
 
-    val uniqueId = UUID.randomUUID().toString()
+    @PrimaryKey
+    @ColumnInfo(name = "id")
+    val uniqueId = UUID.randomUUID().toString() // потом можно будет просто переделать на autoGenerate = true
 
     //val colorString = colorString
 

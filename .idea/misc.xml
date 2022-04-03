@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable/ic_arrow_downward.xml" value="0.2155" />
+        <entry key="app/src/main/res/drawable/ic_arrow_downward_active 2.xml" value="0.227" />
         <entry key="app/src/main/res/drawable/ic_arrow_downward_active.xml" value="0.22" />
         <entry key="app/src/main/res/drawable/ic_arrow_upward.xml" value="0.2155" />
         <entry key="app/src/main/res/drawable/ic_arrow_upward_active.xml" value="0.2155" />
@@ -11,6 +12,7 @@
         <entry key="app/src/main/res/drawable/ic_burger_menu.xml" value="0.162" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.247" />
         <entry key="app/src/main/res/drawable/ic_sorting_toggle.xml" value="0.2155" />
+        <entry key="app/src/main/res/drawable/ic_sorting_toggle_ascending.xml" value="0.2415" />
         <entry key="app/src/main/res/drawable/ic_sorting_toggle_descending.xml" value="0.2155" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/bottom_sheet.xml" value="0.25" />

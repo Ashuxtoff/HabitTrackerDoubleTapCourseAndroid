@@ -1,6 +1,6 @@
 package com.example.task4.fragments
 
-import android.content.Context
+import android.app.Application
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,20 +10,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.task3.objects.Habit
 import com.example.task3.objects.HabitType
 import com.example.task3.objects.TimeIntervalType
-import com.example.task4.FormResultCallback
 import com.example.task4.MainActivity
 import com.example.task4.R
-import com.example.task4.model.Model
+import com.example.task4.repository.Repository
 import com.example.task4.viewModels.FormViewModel
-import com.example.task4.viewModels.HabitsListViewModel
 import kotlinx.android.synthetic.main.fragment_form.*
-import java.sql.Time
 
 
 class FormFragment : Fragment(), TextWatcher {
@@ -61,7 +57,7 @@ class FormFragment : Fragment(), TextWatcher {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return FormViewModel(Model) as T
+                return FormViewModel(Repository(requireContext())) as T
             }
         }).get(FormViewModel::class.java)
     }
