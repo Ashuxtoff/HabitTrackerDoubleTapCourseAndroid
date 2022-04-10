@@ -2,10 +2,9 @@ package com.example.task3.objects
 
 import android.os.Parcel
 import android.os.Parcelable
-import androidx.room.ColumnInfo
-import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
+import com.example.task4.typeConverters.HabitTypeConverter
+import com.example.task4.typeConverters.TimeIntervalTypeConverter
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
@@ -15,14 +14,18 @@ class Habit(
     @ColumnInfo var title: String,
     @ColumnInfo var description: String,
     @ColumnInfo var priority: Int,
-    @Embedded var type : HabitType,
+    @field:TypeConverters(HabitTypeConverter::class)
+    @ColumnInfo(name = "habit_type_res_id")
+    var type : HabitType,
     @ColumnInfo(name = "events_count") var eventsCount: Int,
-    @Embedded var timeIntervalType : TimeIntervalType
+    @field:TypeConverters(TimeIntervalTypeConverter::class)
+    @ColumnInfo(name = "time_interval_type_res_id")
+    var timeIntervalType : TimeIntervalType
 ) : Parcelable {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    val uniqueId = UUID.randomUUID().toString() // потом можно будет просто переделать на autoGenerate = true
+    var uniqueId : Long = 0// потом можно будет просто переделать на autoGenerate = true
 
     //val colorString = colorString
 

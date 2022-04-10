@@ -71,6 +71,7 @@ class BottomSheetFragment : BottomSheetDialogFragment(), TextWatcher {
                 viewModel.setSortingMode(null)
             }
 
+
         }
 
         descendingSortingControl.setOnClickListener {

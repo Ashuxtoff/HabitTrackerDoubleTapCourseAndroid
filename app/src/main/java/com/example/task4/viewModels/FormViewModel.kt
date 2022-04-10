@@ -26,7 +26,7 @@ class FormViewModel(private val repository: Repository) : ViewModel() {
                     type : HabitType,
                     eventsCount : Int,
                     timeIntervalType : TimeIntervalType,
-                    uniqueId : String?) {
+                    uniqueId : Long?) {
 
         if (uniqueId != null) {
             val habit = repository.getHabitById(uniqueId).value

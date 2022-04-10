@@ -56,13 +56,10 @@ class HabitsListFragment : Fragment(), OnItemClickListener {
             .commitNow()
 
 
-        viewModel.currentHabitsList.observe(this.activity as LifecycleOwner, Observer {
-//            habits = viewModel.currentHabitsList.value as MutableList<Habit>?: mutableListOf()
-            habits.clear()
-            habits.addAll(it)
-            habitsRecyclerView.adapter?.notifyDataSetChanged()
-
-
+        viewModel.getCurrentHabitsList().observe(this.activity as LifecycleOwner, Observer {
+                habits.clear()
+                habits.addAll(it)
+                habitsRecyclerView.adapter?.notifyDataSetChanged()
         })
 
         habitsRecyclerView.adapter = HabitsListAdapter(habits, this)
