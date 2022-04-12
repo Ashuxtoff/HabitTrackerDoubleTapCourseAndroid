@@ -1,9 +1,6 @@
 package com.example.task4.viewModels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.example.task3.objects.Habit
 import com.example.task3.objects.HabitType
 import com.example.task4.repository.Repository
@@ -14,12 +11,15 @@ class HabitsListViewModel(private val repository : Repository) : ViewModel() {
         private const val EMPTY_STRING = ""
     }
 
+
     private val mutableIsUsefulCurrent: MutableLiveData<Boolean> = MutableLiveData()
     private val mutableSortingMode: MutableLiveData<String?> = MutableLiveData()
     private val mutableSearchQuery: MutableLiveData<String> = MutableLiveData()
 
     val sortingMode : LiveData<String?> = mutableSortingMode
     val searchQuery : LiveData<String> = mutableSearchQuery
+
+    val mediatorLiveData = MediatorLiveData<List<Habit>>()
 
     init {
         mutableSearchQuery.value = EMPTY_STRING
@@ -38,13 +38,12 @@ class HabitsListViewModel(private val repository : Repository) : ViewModel() {
 
     fun setSortingMode(mode : String?) {
         mutableSortingMode.value = mode ?: EMPTY_STRING
-//        currentHabitsList = Transformations.switchMap(mutableSortingMode,
-//            mode -> repository.getCurrentHabits(HabitType.USEFUL.resId, mode, ""))
+        currentHabitsList = loadCurrentListHabits()
     }
 
     fun setSearchQuery(query : String?) {
         mutableSearchQuery.value = query ?: EMPTY_STRING
-//        currentHabitsList = loadCurrentListHabits()
+        currentHabitsList = loadCurrentListHabits()
     }
 
 //    private fun transform(sortingMode : String) : LiveData<List<Habit>> {
@@ -52,7 +51,7 @@ class HabitsListViewModel(private val repository : Repository) : ViewModel() {
 
 
     private fun loadCurrentListHabits() : LiveData<List<Habit>> {
-        val a = repository.getCurrentHabits(
+        val habitsLiveData = repository.getCurrentHabits(
             if (mutableIsUsefulCurrent.value == false) {
                 HabitType.BAD.resId
             }
@@ -61,8 +60,12 @@ class HabitsListViewModel(private val repository : Repository) : ViewModel() {
             sortingMode.value ?: EMPTY_STRING,
 
             searchQuery.value ?: EMPTY_STRING)
-        val b = a.value
-        return a
+
+        mediatorLiveData.addSource(habitsLiveData) { habits ->
+            mediatorLiveData.value = habits
+        }
+
+        return mediatorLiveData
     }
 
     fun getCurrentHabitsList() : LiveData<List<Habit>> {
