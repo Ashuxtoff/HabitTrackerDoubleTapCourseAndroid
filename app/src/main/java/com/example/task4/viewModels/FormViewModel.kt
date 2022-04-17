@@ -18,15 +18,6 @@ class FormViewModel(private val repository: Repository, private val habitId : Lo
         return editedHabitLD
     }
 
-
-//    private fun getEditedHabitLD(uniqueId: Long) {
-//        editedHabitLD = repository.getHabitById(uniqueId)
-//    }
-//
-//    private val editedHabitTransformation = Transformations.switchMap(editedHabitLD,
-//        { habit -> MutableLiveData(habit)}
-//    )
-
     private fun addHabit(title : String,
                          description : String,
                          priority : Int,

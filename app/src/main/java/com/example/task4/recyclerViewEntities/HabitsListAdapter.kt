@@ -6,9 +6,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.task3.objects.Habit
 import com.example.task4.R
 
-class HabitsListAdapter(private val habits: List<Habit>,
-                        private val itemClickListener: OnItemClickListener) :
+class HabitsListAdapter(private val itemClickListener: OnItemClickListener) :
     RecyclerView.Adapter<HabitsListViewHolder>() {
+
+     var habitsList: List<Habit> = emptyList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitsListViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -16,9 +21,9 @@ class HabitsListAdapter(private val habits: List<Habit>,
     }
 
     override fun onBindViewHolder(holder: HabitsListViewHolder, position: Int) {
-        holder.bind(habits[position], itemClickListener)
+        holder.bind(habitsList[position], itemClickListener)
     }
 
-    override fun getItemCount(): Int = habits.size
+    override fun getItemCount(): Int = habitsList.size
 
 }
