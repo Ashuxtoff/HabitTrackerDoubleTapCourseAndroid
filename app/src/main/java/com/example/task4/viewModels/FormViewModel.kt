@@ -5,8 +5,22 @@ import com.example.task3.objects.Habit
 import com.example.task3.objects.HabitType
 import com.example.task3.objects.TimeIntervalType
 import com.example.task4.repository.Repository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
-class FormViewModel(private val repository: Repository, private val habitId : Long?) : ViewModel() {
+class FormViewModel(private val repository: Repository, private val habitId : Long?) : ViewModel(), CoroutineScope {
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.IO
+
+    override fun onCleared() {
+        super.onCleared()
+        coroutineContext.cancelChildren()
+    }
+
 
     private val editedHabitLD : LiveData<Habit>? = if (habitId != null) {
         repository.getHabitById(habitId)
@@ -35,7 +49,7 @@ class FormViewModel(private val repository: Repository, private val habitId : Lo
                     priority : Int,
                     type : HabitType,
                     eventsCount : Int,
-                    timeIntervalType : TimeIntervalType) {
+                    timeIntervalType : TimeIntervalType) = launch {
 
 
         if (habitId != null) {
