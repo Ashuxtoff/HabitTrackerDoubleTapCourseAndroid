@@ -1,6 +1,5 @@
 package com.example.task4.fragments
 
-import android.app.Application
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.task3.objects.Habit
@@ -29,22 +29,23 @@ class FormFragment : Fragment(), TextWatcher {
     private var currentType = HabitType.USEFUL
     private var currentTimeIntervalType = TimeIntervalType.DAYS
 
-    private lateinit var viewModel : FormViewModel
+    private var editedHabit : Habit? = null
+
+
+    private lateinit var formViewModel : FormViewModel
 
 
     companion object {
 
-        private const val HABIT_ARG = "habit"
         private const val ID_ARG = "id"
 
 
-        fun newInstance(habit : Habit?) : FormFragment{
+        fun newInstance(habitId : Long?) : FormFragment{
             val fragment = FormFragment()
 
-            if (habit != null) {
+            if (habitId != null) {
                 val bundle = Bundle().apply {
-                    putParcelable(HABIT_ARG, habit)
-                    putLong(ID_ARG, habit.uniqueId)
+                    putLong(ID_ARG, habitId)
                 }
                 fragment.arguments = bundle
             }
@@ -55,9 +56,9 @@ class FormFragment : Fragment(), TextWatcher {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+        formViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return FormViewModel(Repository(requireContext())) as T
+                return FormViewModel(Repository(requireContext()), arguments?.getLong(ID_ARG)) as T
             }
         }).get(FormViewModel::class.java)
     }
@@ -109,30 +110,34 @@ class FormFragment : Fragment(), TextWatcher {
         countOfEventsInput.hint = getString(R.string.hintEventsCountUseful)
         currentType = HabitType.USEFUL
 
-        arguments?.let { bundle ->
-            val habit = bundle.getParcelable(HABIT_ARG) as Habit?
+        formViewModel.getEditedHabitLiveData()?.observe(this.activity as LifecycleOwner) { habit ->
+            editedHabit = habit
 
-            titleInput.setText(habit?.title)
-            descriptionInput.setText(habit?.description)
-            priorityInput.setText(habit?.priority.toString() as CharSequence)
+            if (editedHabit != null && this.isVisible) {
+                titleInput.setText(editedHabit?.title)
+                descriptionInput.setText(editedHabit?.description)
+                priorityInput.setText(editedHabit?.priority.toString() as CharSequence)
 
-            when (habit?.type) {
-                HabitType.USEFUL -> {
-                    usefulTypeRadiobutton.isChecked = true
-                    currentType = HabitType.USEFUL
+                when (editedHabit?.type) {
+                    HabitType.USEFUL -> {
+                        usefulTypeRadiobutton.isChecked = true
+                        currentType = HabitType.USEFUL
+                    }
+                    HabitType.BAD -> {
+                        badTypeRadiobutton.isChecked = true
+                        currentType = HabitType.BAD
+                    }
                 }
-                HabitType.BAD -> {
-                    badTypeRadiobutton.isChecked = true
-                    currentType = HabitType.BAD
-                }
+
+                countOfEventsInput.setText(editedHabit?.eventsCount.toString() as CharSequence)
+                currentTimeIntervalType = editedHabit?.timeIntervalType ?: TimeIntervalType.DAYS
+                timeIntervalInput.setText(getText(currentTimeIntervalType.resId))
+
+                button.text = getString(R.string.editButtonText)
             }
-
-            countOfEventsInput.setText(habit?.eventsCount.toString() as CharSequence)
-            currentTimeIntervalType = habit?.timeIntervalType ?: TimeIntervalType.DAYS
-            timeIntervalInput.setText(getText(currentTimeIntervalType.resId))
-
-            button.text = getString(R.string.editButtonText)
         }
+
+
 
         button.setOnClickListener {
 
@@ -146,31 +151,15 @@ class FormFragment : Fragment(), TextWatcher {
                 return@setOnClickListener
             }
 
-            if (arguments == null) {
-                viewModel.processForm(
-                    title,
-                    description,
-                    priorityString.toInt(),
-                    currentType,
-                    countOfEventsString.toInt(),
-                    currentTimeIntervalType,
-                    null
-                )
-            }
-            else {
-                val resultHabit : Habit? = arguments?.getParcelable(HABIT_ARG) as Habit?
-                val uniqueId = resultHabit?.uniqueId
+            formViewModel.processForm(
+                title,
+                description,
+                priorityString.toInt(),
+                currentType,
+                countOfEventsString.toInt(),
+                currentTimeIntervalType
+            )
 
-                viewModel.processForm(
-                    title,
-                    description,
-                    priorityString.toInt(),
-                    currentType,
-                    countOfEventsString.toInt(),
-                    currentTimeIntervalType,
-                    uniqueId
-                )
-            }
 
             activity.supportFragmentManager
                 .beginTransaction()

@@ -1,6 +1,5 @@
 package com.example.task4.fragments
 
-import android.app.Application
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,6 +14,7 @@ import com.example.task3.OnItemClickListener
 import com.example.task3.objects.Habit
 import com.example.task4.R
 import com.example.task4.repository.Repository
+import com.example.task4.viewModels.FormViewModel
 import com.example.task4.viewModels.HabitsListViewModel
 import kotlinx.android.synthetic.main.fragment_habits_list.*
 import kotlin.random.Random
@@ -24,7 +24,8 @@ class HabitsListFragment : Fragment(), OnItemClickListener {
 
     var habits: MutableList<Habit> = mutableListOf()
 
-    private lateinit var viewModel: HabitsListViewModel
+    private lateinit var habitsListViewModel: HabitsListViewModel
+    private lateinit var formViewModel: FormViewModel
 
     val pageId = Random.nextLong()
 
@@ -34,13 +35,12 @@ class HabitsListFragment : Fragment(), OnItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this.requireActivity(), object : ViewModelProvider.Factory {
+        habitsListViewModel = ViewModelProvider(this.requireActivity(), object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                //return HabitsListViewModel(Model, arguments?.getBoolean(HABITS_LIST_ARGS) ?: true) as T
                 return HabitsListViewModel(Repository(requireContext())) as T
             }
         }).get(HabitsListViewModel::class.java)
-        viewModel.setCurrentHabitsList(arguments?.getBoolean(HABITS_LIST_ARGS) ?: true)
+        habitsListViewModel.setCurrentHabitsList(arguments?.getBoolean(HABITS_LIST_ARGS) ?: true)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -56,7 +56,7 @@ class HabitsListFragment : Fragment(), OnItemClickListener {
             .commitNow()
 
 
-        viewModel.getCurrentHabitsList().observe(this.activity as LifecycleOwner, Observer {
+        habitsListViewModel.getCurrentHabitsList().observe(this.activity as LifecycleOwner, Observer {
                 habits.clear()
                 habits.addAll(it)
                 habitsRecyclerView.adapter?.notifyDataSetChanged()
@@ -76,14 +76,21 @@ class HabitsListFragment : Fragment(), OnItemClickListener {
 
     override fun onResume() {
         super.onResume()
-        viewModel.setCurrentHabitsList(arguments?.getBoolean(HABITS_LIST_ARGS) ?: true)
+        habitsListViewModel.setCurrentHabitsList(arguments?.getBoolean(HABITS_LIST_ARGS) ?: true)
     }
 
 
     override fun onItemClicked(habit: Habit) {
+        formViewModel = ViewModelProvider(this.requireActivity(), object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return FormViewModel(Repository(requireContext()), habit.uniqueId) as T
+            }
+        }).get(FormViewModel::class.java)
+
+
         activity?.supportFragmentManager
             ?.beginTransaction()
-            ?.replace(R.id.fragmentPlaceholder, FormFragment.newInstance(habit))
+            ?.replace(R.id.fragmentPlaceholder, FormFragment.newInstance(habit.uniqueId))
             ?.commit()
     }
 
