@@ -5,8 +5,18 @@ import com.example.task3.objects.Habit
 import com.example.task3.objects.HabitType
 import com.example.task3.objects.TimeIntervalType
 import com.example.task4.repository.Repository
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
-class FormViewModel(private val repository: Repository) : ViewModel() {
+class FormViewModel(private val repository: Repository) : ViewModel(), CoroutineScope {
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.IO
+
+    override fun onCleared() {
+        super.onCleared()
+        coroutineContext.cancelChildren()
+    }
 
     private fun addHabit(title : String,
                          description : String,
@@ -26,9 +36,11 @@ class FormViewModel(private val repository: Repository) : ViewModel() {
                     type : HabitType,
                     eventsCount : Int,
                     timeIntervalType : TimeIntervalType,
-                    uniqueId : Long?) {
+                    uniqueId : Long?) = launch {
 
         if (uniqueId != null) {
+
+
             val habit = repository.getHabitById(uniqueId).value
             if (habit != null) {
                 habit.edit(title, description, priority, type, eventsCount, timeIntervalType)
