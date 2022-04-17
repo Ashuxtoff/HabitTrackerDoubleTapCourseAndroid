@@ -22,7 +22,7 @@ import kotlin.random.Random
 
 class HabitsListFragment : Fragment(), OnItemClickListener {
 
-    var habits: MutableList<Habit> = mutableListOf()
+//    var habits: MutableList<Habit> = mutableListOf()
 
     private lateinit var habitsListViewModel: HabitsListViewModel
     private lateinit var formViewModel: FormViewModel
@@ -50,6 +50,8 @@ class HabitsListFragment : Fragment(), OnItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        habitsRecyclerView.adapter = HabitsListAdapter(this)
+
         childFragmentManager
             .beginTransaction()
             .add(R.id.bottomSheetFragmentPlaceholder, BottomSheetFragment())
@@ -57,12 +59,12 @@ class HabitsListFragment : Fragment(), OnItemClickListener {
 
 
         habitsListViewModel.getCurrentHabitsList().observe(this.activity as LifecycleOwner, Observer {
-                habits.clear()
-                habits.addAll(it)
-                habitsRecyclerView.adapter?.notifyDataSetChanged()
+//            habits.clear()
+//            habits.addAll(it)
+            val adapter = habitsRecyclerView.adapter as HabitsListAdapter
+            adapter.habitsList = it
         })
 
-        habitsRecyclerView.adapter = HabitsListAdapter(habits, this)
 
         addHabit.setOnClickListener {
             activity?.supportFragmentManager
