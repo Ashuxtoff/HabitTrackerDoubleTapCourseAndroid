@@ -8,8 +8,8 @@ import com.example.task4.repository.Repository
 
 class FormViewModel(private val repository: Repository, private val habitId : Long?) : ViewModel() {
 
-    private val editedHabitLD : LiveData<Habit>? = if (habitId != null) {
-        repository.getHabitById(habitId)
+    private val editedHabitLD : LiveData<Habit>? = if (habitId != null) { // можно вместо null сделать просто пустую MLD
+        repository.getHabitById(habitId) // возвращается единственный раз
     } else {
         null
     }
