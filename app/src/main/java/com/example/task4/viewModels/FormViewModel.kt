@@ -40,6 +40,7 @@ class FormViewModel(private val repository: Repository) : ViewModel(), Coroutine
 
         if (uniqueId != null) {
 
+
             val habit = repository.getHabitById(uniqueId).value
             if (habit != null) {
                 habit.edit(title, description, priority, type, eventsCount, timeIntervalType)
