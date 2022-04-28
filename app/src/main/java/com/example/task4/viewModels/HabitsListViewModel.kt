@@ -13,8 +13,8 @@ class HabitsListViewModel(private val repository : Repository) : ViewModel() {
 
 
     private val mutableIsUsefulCurrent: MutableLiveData<Boolean> = MutableLiveData()
-    private val mutableSortingMode: MutableLiveData<String?> = MutableLiveData()
-    private val mutableSearchQuery: MutableLiveData<String> = MutableLiveData()
+    private val mutableSortingMode: MutableLiveData<String?> = MutableLiveData(EMPTY_STRING)
+    private val mutableSearchQuery: MutableLiveData<String> = MutableLiveData(EMPTY_STRING)
 
     val sortingMode : LiveData<String?> = mutableSortingMode
     val searchQuery : LiveData<String> = mutableSearchQuery
@@ -22,8 +22,18 @@ class HabitsListViewModel(private val repository : Repository) : ViewModel() {
     private val mediatorLiveData = MediatorLiveData<List<Habit>>()
 
     init {
-        mutableSearchQuery.value = EMPTY_STRING
-        mutableSortingMode.value = EMPTY_STRING
+//        mediatorLiveData.addSource(sortingMode) { mode ->
+//            mediatorLiveData.value = repository.getCurrentHabits(
+//                if (mutableIsUsefulCurrent.value == false) {
+//                    HabitType.BAD.resId
+//                }
+//                else HabitType.USEFUL.resId,
+//
+//                mode,
+//
+//
+//            )
+//        }
     }
 
     private var  currentHabitsList : LiveData<List<Habit>> = MutableLiveData()

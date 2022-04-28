@@ -35,7 +35,7 @@ class HabitsListFragment : Fragment(), OnItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        habitsListViewModel = ViewModelProvider(this.requireActivity(), object : ViewModelProvider.Factory {
+        habitsListViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return HabitsListViewModel(Repository(requireContext())) as T
             }
