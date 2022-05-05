@@ -23,9 +23,9 @@ class Habit(
     var timeIntervalType : TimeIntervalType
 ) : Parcelable {
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     @ColumnInfo(name = "id")
-    var uniqueId : Long = 0// потом можно будет просто переделать на autoGenerate = true
+    var uniqueId : String? = ""
 
     //val colorString = colorString
 
@@ -40,4 +40,6 @@ class Habit(
         eventsCount = newEventsCount
         timeIntervalType = newTimeIntervalType
     }
+
+
 }

@@ -44,7 +44,7 @@ class FormFragment : Fragment(), TextWatcher {
             if (habit != null) {
                 val bundle = Bundle().apply {
                     putParcelable(HABIT_ARG, habit)
-                    putLong(ID_ARG, habit.uniqueId)
+                    putString(ID_ARG, habit.uniqueId)
                 }
                 fragment.arguments = bundle
             }

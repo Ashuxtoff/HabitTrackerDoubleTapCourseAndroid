@@ -3,31 +3,44 @@ package com.example.task4.repository
 
 import android.content.Context
 import androidx.lifecycle.LiveData
-import androidx.room.Room
 import com.example.task3.objects.Habit
-import com.example.task3.objects.HabitType
-import com.example.task3.objects.TimeIntervalType
 import com.example.task4.databaseObjects.AppDatabase
+import com.example.task4.service.HabitsService
 
 class Repository(context: Context) {
 
     private val db = AppDatabase.getInstance(context)
     private val habitDao = db.habitDao()
+    private val service : HabitsService = HabitsService.getInstance()
 
 
-    fun getCurrentHabits(typeResId : Int, sortingMode : String, searchQuery : String) : LiveData<List<Habit>> {
+    suspend fun getCurrentHabits(typeResId : Int, sortingMode : String, searchQuery : String) : LiveData<List<Habit>> {
+        val newHabits = service.getHabits()
+        print(newHabits.toString())
+        habitDao.deleteAllHabits()
+        habitDao.insertHabits(newHabits)
         return habitDao.getCurrentHabits(typeResId, sortingMode, searchQuery)
     }
 
-    fun getHabitById(uuid : Long) : LiveData<Habit> {
+    suspend fun getHabitById(uuid : String) : LiveData<Habit> {
+        val newHabits = service.getHabits()
+        habitDao.deleteAllHabits()
+        habitDao.insertHabits(newHabits)
         return habitDao.getHabitById(uuid)
     }
 
-    fun addHabit(habit : Habit) {
-        habitDao.addHabit(habit)
-    }
+//    suspend fun addHabit(habit : Habit) {
+//        service.putHabit(habit)
+//        habitDao.addHabit(habit)
+//    }
+//
+//    suspend fun editHabit(habit : Habit) {
+//        service.putHabit(habit)
+//        habitDao.editHabit(habit)
+//    }
 
-    fun editHabit(habit : Habit) {
+    suspend fun putHabit(habit : Habit) {
+        service.putHabit(habit) // тут прописать логикуна получение HabitUID
         habitDao.editHabit(habit)
     }
 
