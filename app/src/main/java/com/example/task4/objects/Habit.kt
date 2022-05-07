@@ -25,7 +25,7 @@ class Habit(
 
     @PrimaryKey
     @ColumnInfo(name = "id")
-    var uniqueId : String? = ""
+    var uniqueId : String = ""
 
     //val colorString = colorString
 

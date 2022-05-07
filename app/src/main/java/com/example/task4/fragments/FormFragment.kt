@@ -36,6 +36,7 @@ class FormFragment : Fragment(), TextWatcher {
 
         private const val HABIT_ARG = "habit"
         private const val ID_ARG = "id"
+        private const val EMPTY_STRING = ""
 
 
         fun newInstance(habit : Habit?) : FormFragment{
@@ -45,6 +46,7 @@ class FormFragment : Fragment(), TextWatcher {
                 val bundle = Bundle().apply {
                     putParcelable(HABIT_ARG, habit)
                     putString(ID_ARG, habit.uniqueId)
+
                 }
                 fragment.arguments = bundle
             }
@@ -57,9 +59,10 @@ class FormFragment : Fragment(), TextWatcher {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return FormViewModel(Repository(requireContext())) as T
+                return FormViewModel(Repository(requireContext()),
+                    arguments?.getString(ID_ARG) ?: EMPTY_STRING) as T
             }
-        }).get(FormViewModel::class.java)
+        })[FormViewModel::class.java]
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -146,31 +149,15 @@ class FormFragment : Fragment(), TextWatcher {
                 return@setOnClickListener
             }
 
-            if (arguments == null) {
-                viewModel.processForm(
-                    title,
-                    description,
-                    priorityString.toInt(),
-                    currentType,
-                    countOfEventsString.toInt(),
-                    currentTimeIntervalType,
-                    null
-                )
-            }
-            else {
-                val resultHabit : Habit? = arguments?.getParcelable(HABIT_ARG) as Habit?
-                val uniqueId = resultHabit?.uniqueId
 
-                viewModel.processForm(
-                    title,
-                    description,
-                    priorityString.toInt(),
-                    currentType,
-                    countOfEventsString.toInt(),
-                    currentTimeIntervalType,
-                    uniqueId
-                )
-            }
+            viewModel.processForm(
+                title,
+                description,
+                priorityString.toInt(),
+                currentType,
+                countOfEventsString.toInt(),
+                currentTimeIntervalType
+            )
 
             activity.supportFragmentManager
                 .beginTransaction()

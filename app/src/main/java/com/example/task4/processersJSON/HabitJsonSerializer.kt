@@ -9,6 +9,11 @@ import com.google.gson.JsonObject
 import java.lang.reflect.Type
 
 class HabitJsonSerializer : JsonSerializer<Habit> {
+
+    companion object{
+        private const val EMPTY_STRING = ""
+    }
+
     override fun serialize(src: Habit, typeOfSrc: Type, context: JsonSerializationContext): JsonElement =
         JsonObject().apply {
             addProperty("color", 0)
@@ -24,7 +29,7 @@ class HabitJsonSerializer : JsonSerializer<Habit> {
                 HabitType.BAD -> 1
             })
 
-            if (src.uniqueId != null) {
+            if (src.uniqueId != EMPTY_STRING) {
                 addProperty("uid", src.uniqueId)
             }
         }

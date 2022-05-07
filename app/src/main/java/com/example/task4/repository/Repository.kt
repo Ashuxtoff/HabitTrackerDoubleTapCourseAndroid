@@ -5,9 +5,14 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import com.example.task3.objects.Habit
 import com.example.task4.databaseObjects.AppDatabase
+import com.example.task4.objects.HabitUID
 import com.example.task4.service.HabitsService
 
 class Repository(context: Context) {
+
+    companion object {
+        private const val EMPTY_STRING = ""
+    }
 
     private val db = AppDatabase.getInstance(context)
     private val habitDao = db.habitDao()
@@ -40,8 +45,15 @@ class Repository(context: Context) {
 //    }
 
     suspend fun putHabit(habit : Habit) {
-        service.putHabit(habit) // тут прописать логикуна получение HabitUID
-        habitDao.editHabit(habit)
+        val habitUid : HabitUID = service.putHabit(habit)
+        if (habit.uniqueId == EMPTY_STRING) {
+            habit.uniqueId = habitUid.uid
+            habitDao.addHabit(habit)
+        }
+        else
+        {
+            habitDao.editHabit(habit)
+        }
     }
 
 
