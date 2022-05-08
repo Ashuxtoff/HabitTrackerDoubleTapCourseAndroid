@@ -7,11 +7,14 @@ import com.example.task3.objects.Habit
 import com.example.task4.databaseObjects.AppDatabase
 import com.example.task4.objects.HabitUID
 import com.example.task4.service.HabitsService
+import android.util.Log
 
 class Repository(context: Context) {
 
     companion object {
         private const val EMPTY_STRING = ""
+        private const val ASCENDING_SORTING_MODE = "ascending"
+        private const val DESCENDING_SORTING_MODE = "descending"
     }
 
     private val db = AppDatabase.getInstance(context)
@@ -19,18 +22,25 @@ class Repository(context: Context) {
     private val service : HabitsService = HabitsService.getInstance()
 
 
-    suspend fun getCurrentHabits(typeResId : Int, sortingMode : String, searchQuery : String) : LiveData<List<Habit>> {
-        val newHabits = service.getHabits()
-        print(newHabits.toString())
+    suspend fun getCurrentHabits(typeResId : Int, sortingMode : String, searchQuery : String) : List<Habit> {
+        var newHabits = service.getHabits()
         habitDao.deleteAllHabits()
         habitDao.insertHabits(newHabits)
-        return habitDao.getCurrentHabits(typeResId, sortingMode, searchQuery)
+        if (sortingMode == ASCENDING_SORTING_MODE) {
+            newHabits = newHabits.sortedBy { it.priority }
+        }
+        if (sortingMode == DESCENDING_SORTING_MODE) {
+            newHabits = newHabits.sortedByDescending { it.priority }
+        }
+
+        newHabits = newHabits.filter { habit ->
+            habit.type.resId == typeResId && habit.title.contains(searchQuery)
+        }
+        Log.d("Habits:", newHabits.toString())
+        return newHabits
     }
 
     suspend fun getHabitById(uuid : String) : LiveData<Habit> {
-        val newHabits = service.getHabits()
-        habitDao.deleteAllHabits()
-        habitDao.insertHabits(newHabits)
         return habitDao.getHabitById(uuid)
     }
 

@@ -34,12 +34,11 @@ class HabitsListFragment : Fragment(), OnItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this.requireActivity(), object : ViewModelProvider.Factory {
+        viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                //return HabitsListViewModel(Model, arguments?.getBoolean(HABITS_LIST_ARGS) ?: true) as T
                 return HabitsListViewModel(Repository(requireContext())) as T
             }
-        }).get(HabitsListViewModel::class.java)
+        })[HabitsListViewModel::class.java]
         viewModel.setCurrentHabitsList(arguments?.getBoolean(HABITS_LIST_ARGS) ?: true)
     }
 
@@ -74,10 +73,10 @@ class HabitsListFragment : Fragment(), OnItemClickListener {
     }
 
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.setCurrentHabitsList(arguments?.getBoolean(HABITS_LIST_ARGS) ?: true)
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        viewModel.setCurrentHabitsList(arguments?.getBoolean(HABITS_LIST_ARGS) ?: true)
+//    }
 
 
     override fun onItemClicked(habit: Habit) {

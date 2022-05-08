@@ -14,72 +14,58 @@ class HabitsListViewModel(private val repository : Repository) : ViewModel() {
 
 
     private val mutableIsUsefulCurrent: MutableLiveData<Boolean> = MutableLiveData()
-    private val mutableSortingMode: MutableLiveData<String?> = MutableLiveData(EMPTY_STRING)
+    private val mutableSortingMode: MutableLiveData<String> = MutableLiveData(EMPTY_STRING)
     private val mutableSearchQuery: MutableLiveData<String> = MutableLiveData(EMPTY_STRING)
 
-    val sortingMode : LiveData<String?> = mutableSortingMode
+    private val mutableCurrentHabitsList : MutableLiveData<List<Habit>> = MutableLiveData<List<Habit>>()
+
+    val sortingMode : LiveData<String> = mutableSortingMode
     val searchQuery : LiveData<String> = mutableSearchQuery
 
-    private val mediatorLiveData = MediatorLiveData<List<Habit>>()
+    //private val mediatorLiveData = MediatorLiveData<List<Habit>>()
 
-    private var  currentHabitsList : LiveData<List<Habit>> = MutableLiveData()
+    private val  currentHabitsList : LiveData<List<Habit>> = mutableCurrentHabitsList
 
 
     fun setCurrentHabitsList(isUsefulHabitsCurrent: Boolean) {
         mutableIsUsefulCurrent.value = isUsefulHabitsCurrent
-
-        viewModelScope.launch(Dispatchers.IO) {
-            val newHabitsListDeferred: Deferred<LiveData<List<Habit>>> =
-                async { loadCurrentListHabits() }
-
-            currentHabitsList = newHabitsListDeferred.await()
-        }
+        loadCurrentListHabits()
         //перевычислять currentHabitList?
         //а мы не можем, это же не мьютабл
     }
 
     fun setSortingMode(mode : String?) {
         mutableSortingMode.value = mode ?: EMPTY_STRING
-        viewModelScope.launch(Dispatchers.IO) {
-            val newHabitsListDeferred: Deferred<LiveData<List<Habit>>> =
-                async { loadCurrentListHabits() }
-
-            currentHabitsList = newHabitsListDeferred.await()
-        }
+        loadCurrentListHabits()
     }
 
     fun setSearchQuery(query : String?) {
         mutableSearchQuery.value = query ?: EMPTY_STRING
-        viewModelScope.launch(Dispatchers.IO) {
-            val newHabitsListDeferred: Deferred<LiveData<List<Habit>>> =
-                async { loadCurrentListHabits() }
-
-            currentHabitsList = newHabitsListDeferred.await()
-        }
+        loadCurrentListHabits()
     }
 
 //    private fun transform(sortingMode : String) : LiveData<List<Habit>> {
 //        return repository.getCurrentHabits(HabitType.USEFUL.resId, sortingMode, searchQuery.value ?: "")
 
 
-    private suspend fun loadCurrentListHabits() : LiveData<List<Habit>> {
+    private fun loadCurrentListHabits()  {
 
-        val habitsLiveData = repository.getCurrentHabits(
-            if (mutableIsUsefulCurrent.value == false) {
-                HabitType.BAD.resId
+        viewModelScope.launch(Dispatchers.Main) {
+
+            val habitsDeferred = async (Dispatchers.IO) {
+                repository.getCurrentHabits(
+                    if (mutableIsUsefulCurrent.value == false) {
+                        HabitType.BAD.resId
+                    } else HabitType.USEFUL.resId,
+
+                    sortingMode.value ?: EMPTY_STRING,
+
+                    searchQuery.value ?: EMPTY_STRING
+                )
             }
-            else HabitType.USEFUL.resId,
-
-            sortingMode.value ?: EMPTY_STRING,
-
-            searchQuery.value ?: EMPTY_STRING)
-
-        viewModelScope.launch (Dispatchers.Main) {
-            mediatorLiveData.addSource(habitsLiveData) { habits ->
-                mediatorLiveData.postValue(habits)
-            }
+            val habits = habitsDeferred.await()
+            mutableCurrentHabitsList.postValue(habits)
         }
-        return mediatorLiveData
     }
 
     fun getCurrentHabitsList() : LiveData<List<Habit>> {

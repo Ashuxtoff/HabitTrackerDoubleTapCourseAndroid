@@ -29,7 +29,7 @@ interface HabitDao {
     @Query("DELETE FROM habits")
     fun deleteAllHabits()
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertHabits(habits : List<Habit>)
 
     @Update

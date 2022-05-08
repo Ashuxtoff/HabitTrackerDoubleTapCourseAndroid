@@ -22,7 +22,7 @@ class HabitJsonSerializer : JsonSerializer<Habit> {
             addProperty("description", src.description)
             //add("done_dates", JsonObject().asJsonArray)
             addProperty("frequency", src.eventsCount) // тут не очень конечно получается
-            addProperty("priority", src.priority)
+            addProperty("priority", src.priority - 1)
             addProperty("title", src.title)
             addProperty("type", when(src.type) {
                 HabitType.USEFUL -> 0

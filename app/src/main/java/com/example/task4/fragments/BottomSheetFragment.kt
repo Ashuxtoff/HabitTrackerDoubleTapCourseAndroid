@@ -90,10 +90,10 @@ class BottomSheetFragment : BottomSheetDialogFragment(), TextWatcher {
     }
 
     override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
-        viewModel.setSearchQuery(text.toString())
+        return
     }
 
     override fun afterTextChanged(p0: Editable?) {
-        return
+        viewModel.setSearchQuery(p0.toString())
     }
 }
