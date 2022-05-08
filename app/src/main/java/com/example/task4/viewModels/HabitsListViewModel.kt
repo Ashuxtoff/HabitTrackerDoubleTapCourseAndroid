@@ -24,7 +24,7 @@ class HabitsListViewModel(private val repository : Repository) : ViewModel() {
 
     //private val mediatorLiveData = MediatorLiveData<List<Habit>>()
 
-    private val  currentHabitsList : LiveData<List<Habit>> = mutableCurrentHabitsList
+    val  currentHabitsList : LiveData<List<Habit>> = mutableCurrentHabitsList
 
 
     fun setCurrentHabitsList(isUsefulHabitsCurrent: Boolean) {
@@ -48,29 +48,30 @@ class HabitsListViewModel(private val repository : Repository) : ViewModel() {
 //        return repository.getCurrentHabits(HabitType.USEFUL.resId, sortingMode, searchQuery.value ?: "")
 
 
-    private fun loadCurrentListHabits()  {
+    private fun loadCurrentListHabits() {
 
         viewModelScope.launch(Dispatchers.Main) {
 
-            val habitsDeferred = async (Dispatchers.IO) {
-                repository.getCurrentHabits(
-                    if (mutableIsUsefulCurrent.value == false) {
-                        HabitType.BAD.resId
-                    } else HabitType.USEFUL.resId,
+                val habits =
+                    withContext(Dispatchers.IO) {
+                    repository.getCurrentHabits(
+                        if (mutableIsUsefulCurrent.value == false) {
+                            HabitType.BAD.resId
+                        } else HabitType.USEFUL.resId,
 
-                    sortingMode.value ?: EMPTY_STRING,
+                        sortingMode.value ?: EMPTY_STRING,
 
-                    searchQuery.value ?: EMPTY_STRING
-                )
+                        searchQuery.value ?: EMPTY_STRING
+                    )
             }
-            val habits = habitsDeferred.await()
-            mutableCurrentHabitsList.postValue(habits)
+
+            mutableCurrentHabitsList.value = habits
         }
     }
 
-    fun getCurrentHabitsList() : LiveData<List<Habit>> {
-        return currentHabitsList
-    }
+//    fun getCurrentHabitsList() : LiveData<List<Habit>> {
+//        return currentHabitsList
+//    }
 
 }
 
