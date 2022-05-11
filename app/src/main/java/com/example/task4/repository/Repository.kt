@@ -40,7 +40,7 @@ class Repository(context: Context) {
         return newHabits
     }
 
-    suspend fun getHabitById(uuid : String) : LiveData<Habit> {
+    suspend fun getHabitById(uuid : String) : Habit {
         return habitDao.getHabitById(uuid)
     }
 

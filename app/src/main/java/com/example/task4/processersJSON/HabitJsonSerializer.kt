@@ -7,6 +7,7 @@ import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
 import com.google.gson.JsonObject
 import java.lang.reflect.Type
+import java.util.*
 
 class HabitJsonSerializer : JsonSerializer<Habit> {
 
@@ -18,7 +19,7 @@ class HabitJsonSerializer : JsonSerializer<Habit> {
         JsonObject().apply {
             addProperty("color", 0)
             addProperty("count", 0)
-            addProperty("date", 0)
+            addProperty("date", Date().time)
             addProperty("description", src.description)
             //add("done_dates", JsonObject().asJsonArray)
             addProperty("frequency", src.eventsCount) // тут не очень конечно получается

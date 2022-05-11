@@ -3,6 +3,7 @@ package com.example.task4.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.task3.objects.Habit
 import com.example.task3.objects.HabitType
 import com.example.task3.objects.TimeIntervalType
@@ -16,16 +17,22 @@ class FormViewModel(private val repository: Repository, private val uuid : Strin
         private const val EMPTY_STRING = ""
     }
 
-    private var habitLiveData : LiveData<Habit> = MutableLiveData()
+//    private var habitLiveData : LiveData<Habit>? = null
+//
+//    init {
+//        if (uuid != EMPTY_STRING) {
+//            viewModelScope.launch (Dispatchers.IO) {
+//                habitLiveData = repository.getHabitById(uuid)
+//            }
+//        }
+//    }
+
+    private var habit : Habit? = null
 
     init {
         if (uuid != EMPTY_STRING) {
-            launch {
-                val deferredHabit: Deferred<LiveData<Habit>> = async {
-                    repository.getHabitById(uuid)
-                }
-
-                habitLiveData = deferredHabit.await()
+            viewModelScope.launch (Dispatchers.IO) {
+                habit = repository.getHabitById(uuid)
             }
         }
     }
@@ -42,12 +49,11 @@ class FormViewModel(private val repository: Repository, private val uuid : Strin
                     timeIntervalType : TimeIntervalType) = launch {
 
         if (uuid != EMPTY_STRING) {
-            val habit = habitLiveData.value
             habit?.edit(
                 title, description, priority, type, eventsCount, timeIntervalType
             )
             if (habit != null) {
-                repository.putHabit(habit)
+                repository.putHabit(habit!!)
             }
         }
         else{

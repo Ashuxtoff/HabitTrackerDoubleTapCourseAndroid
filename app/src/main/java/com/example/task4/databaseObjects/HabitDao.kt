@@ -9,7 +9,7 @@ import com.example.task4.R
 interface HabitDao {
 
     @Query("SELECT * FROM habits WHERE id = :uuid")
-    fun getHabitById(uuid : String) : LiveData<Habit>
+    fun getHabitById(uuid : String) : Habit
 
 
     @Query(
@@ -29,7 +29,7 @@ interface HabitDao {
     @Query("DELETE FROM habits")
     fun deleteAllHabits()
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     fun insertHabits(habits : List<Habit>)
 
     @Update

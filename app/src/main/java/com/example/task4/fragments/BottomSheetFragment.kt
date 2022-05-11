@@ -24,7 +24,7 @@ class BottomSheetFragment : BottomSheetDialogFragment(), TextWatcher {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this.requireActivity(), object : ViewModelProvider.Factory {
+        viewModel = ViewModelProvider(this.parentFragment as HabitsListFragment, object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return HabitsListViewModel(Repository(requireContext())) as T
             }
