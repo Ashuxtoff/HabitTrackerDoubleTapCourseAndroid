@@ -40,6 +40,7 @@ class Repository(context: Context) {
         return newHabits // а тут еще catch
     }
 
+
     suspend fun getHabitById(uuid : String) : Habit {
         return habitDao.getHabitById(uuid)
     }
