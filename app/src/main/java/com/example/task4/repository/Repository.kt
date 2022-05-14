@@ -22,8 +22,8 @@ class Repository(context: Context) {
     private val service : HabitsService = HabitsService.getInstance()
 
 
-    suspend fun getCurrentHabits(typeResId : Int, sortingMode : String, searchQuery : String) : List<Habit> {
-        var newHabits = service.getHabits()
+    suspend fun getCurrentHabits(typeResId : Int, sortingMode : String, searchQuery : String) : List<Habit> { // возвращать result от habit
+        var newHabits = service.getHabits() // это все в try
         habitDao.deleteAllHabits()
         habitDao.insertHabits(newHabits)
         if (sortingMode == ASCENDING_SORTING_MODE) {
@@ -37,7 +37,7 @@ class Repository(context: Context) {
             habit.type.resId == typeResId && habit.title.contains(searchQuery)
         }
         Log.d("Habits:", newHabits.toString())
-        return newHabits
+        return newHabits // а тут еще catch
     }
 
     suspend fun getHabitById(uuid : String) : Habit {

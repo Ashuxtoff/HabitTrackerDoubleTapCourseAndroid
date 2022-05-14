@@ -11,7 +11,7 @@ import com.example.task4.repository.Repository
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class FormViewModel(private val repository: Repository, private val uuid : String) : ViewModel(), CoroutineScope {
+class FormViewModel(private val repository: Repository, private val uuid : String) : ViewModel(){
 
     companion object {
         private const val EMPTY_STRING = ""
@@ -37,16 +37,13 @@ class FormViewModel(private val repository: Repository, private val uuid : Strin
         }
     }
 
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.IO
-
 
     fun processForm(title : String,
                     description : String,
                     priority : Int,
                     type : HabitType,
                     eventsCount : Int,
-                    timeIntervalType : TimeIntervalType) = launch {
+                    timeIntervalType : TimeIntervalType) = viewModelScope.launch (Dispatchers.IO) {
 
         if (uuid != EMPTY_STRING) {
             habit?.edit(
@@ -56,16 +53,11 @@ class FormViewModel(private val repository: Repository, private val uuid : Strin
                 repository.putHabit(habit!!)
             }
         }
-        else{
+        else {
             repository.putHabit(
                 Habit(title, description, priority, type, eventsCount, timeIntervalType)
             )
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        coroutineContext.cancelChildren()
     }
 }
 
