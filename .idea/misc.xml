@@ -27,6 +27,7 @@
         <entry key="app/src/main/res/layout/item_habit_list.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/list_adapter.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/menu/drawer_menu.xml" value="0.24166666666666667" />
+        <entry key="presentation/src/main/res/menu/drawer_menu.xml" value="0.253125" />
       </map>
     </option>
   </component>
