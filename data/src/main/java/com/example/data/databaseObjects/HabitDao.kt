@@ -3,13 +3,14 @@ package com.example.data.databaseObjects.databaseObjects
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.task3.objects.Habit
+import kotlinx.coroutines.flow.Flow
 
 
 @Dao
 interface HabitDao {
 
     @Query("SELECT * FROM habits WHERE id = :uuid")
-    fun getHabitById(uuid : String) : Habit
+    fun getHabitById(uuid : String) : Flow<Habit>
 
 
     @Query(
@@ -20,7 +21,7 @@ interface HabitDao {
                 "WHEN 'descending' = :sortingMode THEN (priority * -1) " +
                 "END ASC"
                 )
-    fun getCurrentHabits(typeResId : Int, sortingMode : String, searchQuery : String) : LiveData<List<Habit>>
+    fun getCurrentHabits(typeResId : Int, sortingMode : String, searchQuery : String) : Flow<List<Habit>>
 
 
     @Insert

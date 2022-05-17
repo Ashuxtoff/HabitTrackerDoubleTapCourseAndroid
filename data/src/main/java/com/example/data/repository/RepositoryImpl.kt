@@ -8,6 +8,9 @@ import com.example.task4.service.HabitsService
 import android.util.Log
 import com.example.data.databaseObjects.databaseObjects.AppDatabase
 import com.example.domain.repository.Repository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 
 class  RepositoryImpl(context: Context) : Repository {
 
@@ -22,30 +25,30 @@ class  RepositoryImpl(context: Context) : Repository {
     private val service : HabitsService = HabitsService.getInstance()
 
 
-    override suspend fun getCurrentHabits(typeResId : Int, sortingMode : String, searchQuery : String) : List<Habit> { // возвращать result от habit
-        var newHabits = service.getHabits() // это все в try
+    override suspend fun getCurrentHabits(typeResId : Int, sortingMode : String, searchQuery : String) : Flow<List<Habit>> { // возвращать result от habit
+        var newHabitsFlow = service.getHabits() // это все в try
         habitDao.deleteAllHabits()
-        habitDao.insertHabits(newHabits)
+        habitDao.insertHabits(newHabitsFlow.first())
         if (sortingMode == ASCENDING_SORTING_MODE) {
-            newHabits = newHabits.sortedBy { it.priority }
+            newHabitsFlow.map { list -> list.sortedBy { it.priority } }
         }
         if (sortingMode == DESCENDING_SORTING_MODE) {
-            newHabits = newHabits.sortedByDescending { it.priority }
+            newHabitsFlow.map { list -> list.sortedByDescending { it.priority } }
         }
 
-        newHabits = newHabits.filter { habit ->
-            habit.type.resId == typeResId && habit.title.contains(searchQuery)
-        }
-        Log.d("Habits:", newHabits.toString())
-        return newHabits // а тут еще catch
+        newHabitsFlow = newHabitsFlow.map { list -> list.filter { habit ->
+            habit.type.resId == typeResId && habit.title.contains(searchQuery) } }
+
+        //Log.d("Habits:", newHabitsFlow.toString())
+        return newHabitsFlow // а тут еще catch
     }
 
 
-    override suspend fun getHabitById(uuid : String) : Habit {
+    override suspend fun getHabitById(uuid : String) : Flow<Habit> {
         return habitDao.getHabitById(uuid)
     }
 
-    override suspend fun putHabit(habit : Habit) {
+    override suspend fun putHabit(habit : Habit) : Habit {
         val habitUid : HabitUID = service.putHabit(habit)
         if (habit.uniqueId == EMPTY_STRING) {
             habit.uniqueId = habitUid.uid
@@ -55,6 +58,12 @@ class  RepositoryImpl(context: Context) : Repository {
         {
             habitDao.editHabit(habit)
         }
+
+        return habit
+    }
+
+    override suspend fun doHabit(habit: Habit): Flow<Habit> {
+        TODO("Not yet implemented")
     }
 }
 

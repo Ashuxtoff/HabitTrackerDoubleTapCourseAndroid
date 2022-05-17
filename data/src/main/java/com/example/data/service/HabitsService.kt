@@ -6,6 +6,7 @@ import com.example.task4.processersJSON.HabitJsonDeserializer
 import com.example.task4.processersJSON.HabitJsonSerializer
 import com.example.task4.processersJSON.HabitUIDJsonDeserializer
 import com.google.gson.GsonBuilder
+import kotlinx.coroutines.flow.Flow
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -21,7 +22,7 @@ interface HabitsService {
     companion object {
         const val TOKEN : String = "23f80e7b-7e5d-4e9d-b072-03d900e4a9b3"
 
-        private val interceptor = object : Interceptor {
+        val interceptor = object : Interceptor {
             override fun intercept(chain: Interceptor.Chain): Response {
                 val originalRequest = chain.request()
                 val builder = originalRequest.newBuilder().header(
@@ -70,7 +71,7 @@ interface HabitsService {
     }
 
     @GET("habit")
-    suspend fun getHabits(): List<Habit>
+    suspend fun getHabits(): Flow<List<Habit>>
 
     @PUT("habit")
     suspend fun putHabit(@Body habit: Habit): HabitUID
